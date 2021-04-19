@@ -128,9 +128,14 @@ class Module extends AbstractModule
             return;
         }
 
+        $zipList = (bool) $settings->get('zip_list_zip');
+
         // Run the job.
         $dispatcher = $services->get(\Omeka\Job\Dispatcher::class);
-        $job = $dispatcher->dispatch(\Zip\Job\ZipFiles::class, ['zipBy' => $zipBy]);
+        $job = $dispatcher->dispatch(\Zip\Job\ZipFiles::class, [
+            'zipBy' => $zipBy,
+            'zipList' => $zipList,
+        ]);
         $jobId = $job->getId();
 
         $message = new Message(
@@ -168,7 +173,7 @@ SQL;
 
         $connection = $this->getServiceLocator()->get('Omeka\EntityManager')->getConnection();
         $result = $connection->executeQuery($sql, ['class' => $class])->fetchAll(\PDO::FETCH_ASSOC);
-pmf($result);
+
         // Unselect processes without pid.
         foreach ($result as $id => $row) {
             // TODO The check of the pid works only with Linux.

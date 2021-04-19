@@ -73,6 +73,16 @@ class SettingsFieldset extends Fieldset
                 ],
             ])
             ->add([
+                'name' => 'zip_list_zip',
+                'type' => Element\Checkbox::class,
+                'options' => [
+                    'label' => 'Add file "zipfiles.txt" with the list of zip files', // @translate
+                ],
+                'attributes' => [
+                    'id' => 'zip_list_zip',
+                ],
+            ])
+            ->add([
                 'name' => 'zip_job',
                 'type' => Element\Checkbox::class,
                 'options' => [

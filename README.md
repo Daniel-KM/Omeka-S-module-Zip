@@ -35,6 +35,10 @@ The zip are created one-time when you check the box "create zips now" in the
 main settings. Zip files are available in directory "files/zip" at the root of
 Omeka.
 
+The first zip is always `files/zip/{type}_0001.zip`, for example "files/zip/large_0001.zip".
+The number total of files is indicated in the comments of each zip file. A list
+of files is available at "files/zip/zipfiles.txt".
+
 
 Warning
 -------

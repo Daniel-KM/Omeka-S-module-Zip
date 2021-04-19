@@ -51,6 +51,13 @@ class ZipFiles extends AbstractJob
             ));
         }
 
+        if ($this->getArg('zipList')) {
+            $this->addZipList();
+            $this->logger->info(
+                'Added zip list in files/zip/ziplist.txt.' // @translate
+            );
+        }
+
         $this->logger->notice(
             'Zipping ended.' // @translate
         );
@@ -73,7 +80,7 @@ class ZipFiles extends AbstractJob
 
         @mkdir(dirname($baseFilename), 0775, true);
 
-        foreach (array_chunk($filesList, $by) as $indexChunk => $files) {
+        foreach (array_chunk($filesList, $by) as $files) {
             if ($this->shouldStop()) {
                 $this->logger->warn(new Message(
                     'Zipping "%s" files stopped.', // @translate
@@ -84,11 +91,6 @@ class ZipFiles extends AbstractJob
                 }
                 return 0;
             }
-
-            $this->logger->info(new Message(
-                'Zipping "%s": chunk %d/%d', // @translate
-                $type, $indexChunk + 1, $totalChunks
-            ));
 
             $filepath = $baseFilename . sprintf('%04d', ++$index) . '.zip';
             $filesZip[] = $filepath;
@@ -114,6 +116,7 @@ INI;
 
         // Remove all old zip files for this type.
         $removeList = glob($finalBaseFilename . '*.zip');
+        $removeList[] = $this->basePath .'/zip/zipfiles.txt';
         foreach ($removeList as $file) {
             @unlink($file);
         }
@@ -124,6 +127,15 @@ INI;
         }
 
         return count($filesZip);
+    }
+
+    protected function addZipList(): void
+    {
+        $length = mb_strlen($this->basePath) + 1;
+        $list = implode("\n", array_map(function($v) use ($length) {
+            return mb_substr($v, $length);
+        }, glob($this->basePath .'/zip/*.zip')));
+        file_put_contents($this->basePath .'/zip/zipfiles.txt', $list);
     }
 
     /**
