@@ -1,0 +1,137 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-04-19 00:00+0000\n"
+"PO-Revision-Date: 2021-04-19 00:00+0000\n"
+"Last-Translator: Daniel Berthereau <Daniel.fr@Berthereau.net>\n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.2\n"
+
+#: src/Generic/AbstractModule.php:66
+#, php-format
+msgid "This module requires the module \"%s\"."
+msgstr "Ce module requiert le module \"%s\"."
+
+#: src/Generic/AbstractModule.php:73
+#, php-format
+msgid "This module requires modules \"%s\"."
+msgstr "Ce module requiert les modules \"%s\"."
+
+#: src/Generic/AbstractModule.php:80
+msgid "This module has resources that cannot be installed."
+msgstr "Ce module a des ressource qui ne peuvent pas être installées."
+
+#: src/Generic/AbstractModule.php:707
+#, php-format
+msgid ""
+"The module \"%s\" was automatically deactivated because the dependencies are "
+"unavailable."
+msgstr ""
+"Le module \"%s\" a été automatiquement désactivé car ses dépendances ne sont "
+"plus disponibles."
+
+#: Module.php:55 Module.php:198
+#, php-format
+msgid "The directory \"%s\" is not writeable."
+msgstr "Le dossier \"%s\" n’est pas inscriptible."
+
+#: Module.php:93
+#, php-format
+msgid ""
+"Another job is running for the same process (job %1$s#%2$d%3$s, %4$slogs"
+"%3$s)."
+msgstr "Une autre tâche est en cours (job %1$s#%2$d%3$s, %4$sjournaux%3$s)."
+
+#: Module.php:125 src/Job/ZipFiles.php:37
+msgid "No zip to create."
+msgstr "Aucun zip à créer."
+
+#: Module.php:136
+#, php-format
+msgid "Creating zips in background (job %1$s#%2$d%3$s, %4$slogs%3$s)."
+msgstr ""
+"Création des zips en arrière-plan (job %1$s#%2$d%3$s, %4$sjournaux%3$s)."
+
+#: Module.php:209
+#, php-format
+msgid "The directory \"%s\" is not writeable: %s."
+msgstr "Le dossier \"%s\" n’est pas inscriptible : %s."
+
+#: src/Form/SettingsFieldset.php:10
+msgid "Zip resources"
+msgstr "Zip ressources"
+
+#: src/Form/SettingsFieldset.php:19
+msgid "Number of original files to store by zip"
+msgstr "Nombre de fichiers \"original\" par fichier zip"
+
+#: src/Form/SettingsFieldset.php:20 src/Form/SettingsFieldset.php:32
+#: src/Form/SettingsFieldset.php:44 src/Form/SettingsFieldset.php:56
+#: src/Form/SettingsFieldset.php:68
+msgid "Set 0 not to create the zip."
+msgstr "Indiquer 0 pour ne pas créer de zip."
+
+#: src/Form/SettingsFieldset.php:31
+msgid "Number of large files to store by zip"
+msgstr "Nombre de fichiers \"large\" par fichier zip"
+
+#: src/Form/SettingsFieldset.php:43
+msgid "Number of medium files to store by zip"
+msgstr "Nombre de fichiers \"medium\" par fichier zip"
+
+#: src/Form/SettingsFieldset.php:55
+msgid "Number of square files to store by zip"
+msgstr "Nombre de fichiers \"square\" par fichier zip"
+
+#: src/Form/SettingsFieldset.php:67
+msgid "Number of asset files to store by zip"
+msgstr "Nombre de fichiers \"asset\" par fichier zip"
+
+#: src/Form/SettingsFieldset.php:79
+msgid "Create the zip now"
+msgstr "Créer le zip maintenant"
+
+#: src/Job/ZipFiles.php:44
+#, php-format
+msgid "Zipping \"%s\" files by %s."
+msgstr "Compression des fichiers \"%s\" par %s."
+
+#: src/Job/ZipFiles.php:49
+#, php-format
+msgid "Zipping \"%s\" files by %s ended: %d files created in folder files/zip."
+msgstr ""
+"Compression des fichiers \"%s\" par %s s’est terminé : %d fichiers créés "
+"dans le dossier files/zip."
+
+#: src/Job/ZipFiles.php:55
+msgid "Zipping ended."
+msgstr "Fin de la compression."
+
+#: src/Job/ZipFiles.php:79
+#, php-format
+msgid "Zipping \"%s\" files stopped."
+msgstr "La compression des fichiers \"%s\" a été arrêtée."
+
+#: src/Job/ZipFiles.php:89
+#, php-format
+msgid "Zipping \"%s\": chunk %d/%d"
+msgstr "Compression \"%s\": partie %d/%d"
+
+#~ msgid "The directory \"{path}\" is not writeable."
+#~ msgstr "Le dossier \"{path}\" n’est pas inscriptible."
+
+#~ msgid "The directory \"{path}\" is not writeable: {error}."
+#~ msgstr "Le dossier \"{path}\" n’est pas inscriptible : {error}."
+
+#~ msgid "No zips to create."
+#~ msgstr "Aucun zip à créer."

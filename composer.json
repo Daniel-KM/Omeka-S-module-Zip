@@ -1,0 +1,25 @@
+{
+    "name": "daniel-km/omeka-s-module-zip",
+    "description": "Zip (module for Omeka S)",
+    "type": "library",
+    "license": "CECILL-2.1",
+    "authors": [
+        {
+            "name": "Daniel Berthereau",
+            "email": "Daniel.packagist@Berthereau.net"
+        }
+    ],
+    "homepage": "https://gitlab.com/Daniel-KM/Omeka-S-module-Zip",
+    "support": {
+        "issues": "https://gitlab.com/Daniel-KM/Omeka-S-module-Zip/-/issues",
+        "forum": "https://forum.omeka.org/"
+    },
+    "keywords": [
+        "Omeka S",
+        "module",
+        "zip"
+    ],
+    "require": {
+        "ext-zip": "*"
+    }
+}

@@ -1,0 +1,123 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-04-19 00:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/Generic/AbstractModule.php:66
+#, php-format
+msgid "This module requires the module \"%s\"."
+msgstr ""
+
+#: src/Generic/AbstractModule.php:73
+#, php-format
+msgid "This module requires modules \"%s\"."
+msgstr ""
+
+#: src/Generic/AbstractModule.php:80
+msgid "This module has resources that cannot be installed."
+msgstr ""
+
+#: src/Generic/AbstractModule.php:707
+#, php-format
+msgid ""
+"The module \"%s\" was automatically deactivated because the dependencies are "
+"unavailable."
+msgstr ""
+
+#: Module.php:55 Module.php:198
+#, php-format
+msgid "The directory \"%s\" is not writeable."
+msgstr ""
+
+#: Module.php:93
+#, php-format
+msgid ""
+"Another job is running for the same process (job %1$s#%2$d%3$s, %4$slogs"
+"%3$s)."
+msgstr ""
+
+#: Module.php:125 src/Job/ZipFiles.php:37
+msgid "No zip to create."
+msgstr ""
+
+#: Module.php:136
+#, php-format
+msgid "Creating zips in background (job %1$s#%2$d%3$s, %4$slogs%3$s)."
+msgstr ""
+
+#: Module.php:209
+#, php-format
+msgid "The directory \"%s\" is not writeable: %s."
+msgstr ""
+
+#: src/Form/SettingsFieldset.php:10
+msgid "Zip resources"
+msgstr ""
+
+#: src/Form/SettingsFieldset.php:19
+msgid "Number of original files to store by zip"
+msgstr ""
+
+#: src/Form/SettingsFieldset.php:20 src/Form/SettingsFieldset.php:32
+#: src/Form/SettingsFieldset.php:44 src/Form/SettingsFieldset.php:56
+#: src/Form/SettingsFieldset.php:68
+msgid "Set 0 not to create the zip."
+msgstr ""
+
+#: src/Form/SettingsFieldset.php:31
+msgid "Number of large files to store by zip"
+msgstr ""
+
+#: src/Form/SettingsFieldset.php:43
+msgid "Number of medium files to store by zip"
+msgstr ""
+
+#: src/Form/SettingsFieldset.php:55
+msgid "Number of square files to store by zip"
+msgstr ""
+
+#: src/Form/SettingsFieldset.php:67
+msgid "Number of asset files to store by zip"
+msgstr ""
+
+#: src/Form/SettingsFieldset.php:79
+msgid "Create the zip now"
+msgstr ""
+
+#: src/Job/ZipFiles.php:44
+#, php-format
+msgid "Zipping \"%s\" files by %s."
+msgstr ""
+
+#: src/Job/ZipFiles.php:49
+#, php-format
+msgid "Zipping \"%s\" files by %s ended: %d files created in folder files/zip."
+msgstr ""
+
+#: src/Job/ZipFiles.php:55
+msgid "Zipping ended."
+msgstr ""
+
+#: src/Job/ZipFiles.php:79
+#, php-format
+msgid "Zipping \"%s\" files stopped."
+msgstr ""
+
+#: src/Job/ZipFiles.php:89
+#, php-format
+msgid "Zipping \"%s\": chunk %d/%d"
+msgstr ""
