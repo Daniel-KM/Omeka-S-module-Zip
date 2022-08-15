@@ -97,7 +97,7 @@ been built for the digital library [Explore] of [Université PSL] (Paris Science
 [Zip]: https://gitlab.com/Daniel-KM/Omeka-S-module-Zip
 [Omeka S]: https://omeka.org/s
 [installing a module]: http://dev.omeka.org/docs/s/user-manual/modules/#installing-modules
-[Zip.zip]: https://gitlab.com/Daniel-KM/Omeka-S-module-Zip/-/releases
+[Zip.zip]: https://github.com/Daniel-KM/Omeka-S-module-Zip/-/releases
 [module issues]: https://gitlab.com/Daniel-KM/Omeka-S-module-Zip/-/issues
 [CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
