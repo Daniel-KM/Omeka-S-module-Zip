@@ -12,6 +12,7 @@ class SettingsFieldset extends Fieldset
     public function init(): void
     {
         $this
+            ->setAttribute('id', 'zip')
             ->add([
                 'name' => 'zip_original',
                 'type' => Element\Number::class,

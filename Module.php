@@ -172,7 +172,7 @@ ORDER BY id ASC;
 SQL;
 
         $connection = $this->getServiceLocator()->get('Omeka\EntityManager')->getConnection();
-        $result = $connection->executeQuery($sql, ['class' => $class])->fetchAll(\PDO::FETCH_ASSOC);
+        $result = $connection->executeQuery($sql, ['class' => $class])->fetchAllAssociative();
 
         // Unselect processes without pid.
         foreach ($result as $id => $row) {
@@ -199,7 +199,7 @@ SQL;
     protected function checkDestinationDir(string $dirPath): ?string
     {
         if (file_exists($dirPath)) {
-            if (!is_dir($dirPath) || !is_readable($dirPath) || !is_writable($dirPath)) {
+            if (!is_dir($dirPath) || !is_readable($dirPath) || !is_writeable($dirPath)) {
                 $this->getServiceLocator()->get('Omeka\Logger')->err(new Message(
                     'The directory "%s" is not writeable.', // @translate
                     $dirPath
