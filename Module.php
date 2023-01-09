@@ -74,7 +74,7 @@ class Module extends AbstractModule
         // Params are already checked.
         $services = $this->getServiceLocator();
         $params = $services->get('ViewHelperManager')->get('params')->fromPost();
-        $zipJob = !empty($params['zip']['zip_job']);
+        $zipJob = !empty($params['zip_job']);
         if ($zipJob) {
             $this->prepareZip();
         }

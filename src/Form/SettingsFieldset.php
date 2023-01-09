@@ -4,21 +4,28 @@ namespace Zip\Form;
 
 use Laminas\Form\Element;
 use Laminas\Form\Fieldset;
+use Zip\Form\Element as ZipElement;
 
 class SettingsFieldset extends Fieldset
 {
     protected $label = 'Zip resources'; // @translate
 
+    protected $elementGroups = [
+        'backup' => 'Backup', // @translate
+        'jobs' => 'Jobs', // @translate
+    ];
+
     public function init(): void
     {
         $this
             ->setAttribute('id', 'zip')
+            ->setOption('element_groups', $this->elementGroups)
             ->add([
                 'name' => 'zip_original',
                 'type' => Element\Number::class,
                 'options' => [
-                    'label' => 'Number of original files to store by zip', // @translate
-                    'info' => 'Set 0 not to create the zip.', // @translate
+                    'element_group' => 'backup',
+                    'label' => 'Create a zip for original files: Number of files by zip', // @translate
                 ],
                 'attributes' => [
                     'id' => 'zip_original',
@@ -29,8 +36,8 @@ class SettingsFieldset extends Fieldset
                 'name' => 'zip_large',
                 'type' => Element\Number::class,
                 'options' => [
-                    'label' => 'Number of large files to store by zip', // @translate
-                    'info' => 'Set 0 not to create the zip.', // @translate
+                    'element_group' => 'backup',
+                    'label' => 'Create a zip for large files: Number of files by zip', // @translate
                 ],
                 'attributes' => [
                     'id' => 'zip_large',
@@ -41,8 +48,8 @@ class SettingsFieldset extends Fieldset
                 'name' => 'zip_medium',
                 'type' => Element\Number::class,
                 'options' => [
-                    'label' => 'Number of medium files to store by zip', // @translate
-                    'info' => 'Set 0 not to create the zip.', // @translate
+                    'element_group' => 'backup',
+                    'label' => 'Create a zip for medium files: Number of files by zip', // @translate
                 ],
                 'attributes' => [
                     'id' => 'zip_medium',
@@ -53,8 +60,8 @@ class SettingsFieldset extends Fieldset
                 'name' => 'zip_square',
                 'type' => Element\Number::class,
                 'options' => [
-                    'label' => 'Number of square files to store by zip', // @translate
-                    'info' => 'Set 0 not to create the zip.', // @translate
+                    'element_group' => 'backup',
+                    'label' => 'Create a zip for square files: Number of files by zip', // @translate
                 ],
                 'attributes' => [
                     'id' => 'zip_square',
@@ -65,8 +72,8 @@ class SettingsFieldset extends Fieldset
                 'name' => 'zip_asset',
                 'type' => Element\Number::class,
                 'options' => [
-                    'label' => 'Number of asset files to store by zip', // @translate
-                    'info' => 'Set 0 not to create the zip.', // @translate
+                    'element_group' => 'backup',
+                    'label' => 'Create a zip for asset files: Number of files by zip', // @translate
                 ],
                 'attributes' => [
                     'id' => 'zip_asset',
@@ -77,6 +84,7 @@ class SettingsFieldset extends Fieldset
                 'name' => 'zip_list_zip',
                 'type' => Element\Checkbox::class,
                 'options' => [
+                    'element_group' => 'backup',
                     'label' => 'Add file "zipfiles.txt" with the list of zip files', // @translate
                 ],
                 'attributes' => [
@@ -87,7 +95,8 @@ class SettingsFieldset extends Fieldset
                 'name' => 'zip_job',
                 'type' => Element\Checkbox::class,
                 'options' => [
-                    'label' => 'Create the zip now', // @translate
+                    'element_group' => 'jobs',
+                    'label' => 'Run background task to create zip files', // @translate
                 ],
                 'attributes' => [
                     'id' => 'zip_job',
