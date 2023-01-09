@@ -39,7 +39,6 @@ use Generic\AbstractModule;
 use Laminas\EventManager\Event;
 use Laminas\EventManager\SharedEventManagerInterface;
 use Omeka\Module\Exception\ModuleCannotInstallException;
-use Omeka\Mvc\Controller\Plugin\Messenger;
 use Omeka\Stdlib\Message;
 
 class Module extends AbstractModule
@@ -72,19 +71,21 @@ class Module extends AbstractModule
     {
         parent::handleMainSettings($event);
 
+        // Params are already checked.
+        $services = $this->getServiceLocator();
+        $params = $services->get('ViewHelperManager')->get('params')->fromPost();
+        $zipJob = !empty($params['zip']['zip_job']);
+        if ($zipJob) {
+            $this->prepareZip();
+        }
+    }
+
+    protected function prepareZip()
+    {
         $services = $this->getServiceLocator();
         $settings = $services->get('Omeka\Settings');
-        $zipJob = $settings->get('zip_job');
-
-        // Reset the setting in all cases.
-        $settings->set('zip_job', false);
-
-        if (!$zipJob) {
-            return;
-        }
-
-        $messenger = $services->get('ControllerPluginManager')->get('messenger');
         $urlHelper = $services->get('ViewHelperManager')->get('url');
+        $messenger = $services->get('ControllerPluginManager')->get('messenger');
 
         // Check if a zip job is already running before running a new one.
         $jobId = $this->checkJob(\Zip\Job\ZipFiles::class);

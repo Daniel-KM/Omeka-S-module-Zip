@@ -26,7 +26,6 @@ return [
             'zip_square' => 2000,
             'zip_asset' => 1000,
             'zip_list_zip' => true,
-            'zip_job' => false,
         ],
     ],
 ];
