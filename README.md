@@ -88,7 +88,7 @@ of the CeCILL license and that you accept its terms.
 Copyright
 ---------
 
-* Copyright Daniel Berthereau, 2017-2021 [Daniel-KM] on GitLab)
+* Copyright Daniel Berthereau, 2017-2023 [Daniel-KM] on GitLab)
 
 The admin part has been built for the project [Watau] and the public part has
 been built for the digital library [Explore] of [Université PSL] (Paris Sciences & Lettres).
@@ -96,7 +96,7 @@ been built for the digital library [Explore] of [Université PSL] (Paris Science
 
 [Zip]: https://gitlab.com/Daniel-KM/Omeka-S-module-Zip
 [Omeka S]: https://omeka.org/s
-[installing a module]: http://dev.omeka.org/docs/s/user-manual/modules/#installing-modules
+[Installing a module]: https://omeka.org/s/docs/user-manual/modules/#installing-modules
 [Zip.zip]: https://github.com/Daniel-KM/Omeka-S-module-Zip/-/releases
 [module issues]: https://gitlab.com/Daniel-KM/Omeka-S-module-Zip/-/issues
 [CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
