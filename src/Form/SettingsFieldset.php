@@ -10,7 +10,7 @@ class SettingsFieldset extends Fieldset
     protected $label = 'Zip resources'; // @translate
 
     protected $elementGroups = [
-        'backup' => 'Backup', // @translate
+        'zip' => 'Zip', // @translate
         'jobs' => 'Jobs', // @translate
     ];
 
@@ -23,7 +23,7 @@ class SettingsFieldset extends Fieldset
                 'name' => 'zip_original',
                 'type' => Element\Number::class,
                 'options' => [
-                    'element_group' => 'backup',
+                    'element_group' => 'zip',
                     'label' => 'Create a zip for original files: Number of files by zip', // @translate
                 ],
                 'attributes' => [
@@ -35,7 +35,7 @@ class SettingsFieldset extends Fieldset
                 'name' => 'zip_large',
                 'type' => Element\Number::class,
                 'options' => [
-                    'element_group' => 'backup',
+                    'element_group' => 'zip',
                     'label' => 'Create a zip for large files: Number of files by zip', // @translate
                 ],
                 'attributes' => [
@@ -47,7 +47,7 @@ class SettingsFieldset extends Fieldset
                 'name' => 'zip_medium',
                 'type' => Element\Number::class,
                 'options' => [
-                    'element_group' => 'backup',
+                    'element_group' => 'zip',
                     'label' => 'Create a zip for medium files: Number of files by zip', // @translate
                 ],
                 'attributes' => [
@@ -59,7 +59,7 @@ class SettingsFieldset extends Fieldset
                 'name' => 'zip_square',
                 'type' => Element\Number::class,
                 'options' => [
-                    'element_group' => 'backup',
+                    'element_group' => 'zip',
                     'label' => 'Create a zip for square files: Number of files by zip', // @translate
                 ],
                 'attributes' => [
@@ -71,7 +71,7 @@ class SettingsFieldset extends Fieldset
                 'name' => 'zip_asset',
                 'type' => Element\Number::class,
                 'options' => [
-                    'element_group' => 'backup',
+                    'element_group' => 'zip',
                     'label' => 'Create a zip for asset files: Number of files by zip', // @translate
                 ],
                 'attributes' => [
@@ -83,7 +83,7 @@ class SettingsFieldset extends Fieldset
                 'name' => 'zip_list_zip',
                 'type' => Element\Checkbox::class,
                 'options' => [
-                    'element_group' => 'backup',
+                    'element_group' => 'zip',
                     'label' => 'Add file "zipfiles.txt" with the list of zip files', // @translate
                 ],
                 'attributes' => [
@@ -94,7 +94,7 @@ class SettingsFieldset extends Fieldset
                 'name' => 'zip_job',
                 'type' => Element\Checkbox::class,
                 'options' => [
-                    'element_group' => 'jobs',
+                    'element_group' => 'zip',
                     'label' => 'Run background task to create zip files', // @translate
                 ],
                 'attributes' => [
