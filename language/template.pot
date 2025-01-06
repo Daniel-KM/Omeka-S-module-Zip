@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-15 00:00+0000\n"
+"POT-Creation-Date: 2025-01-06 00:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,126 +17,139 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Generic/AbstractModule.php:66 src/Generic/AbstractModule.php:740
+#: data/scripts/upgrade.php:32 Module.php:39
 #, php-format
-msgid "This module requires the module \"%s\"."
+msgid "The module %1$s should be upgraded to version %2$s or later."
 msgstr ""
 
-#: src/Generic/AbstractModule.php:73
-#, php-format
-msgid "This module requires modules \"%s\"."
+#: data/scripts/upgrade.php:42
+msgid "It is now possible to store resources separately with files."
 msgstr ""
 
-#: src/Generic/AbstractModule.php:80
-msgid "This module has resources that cannot be installed."
+#: data/scripts/upgrade.php:49
+msgid "It is now possible to store zip by item."
 msgstr ""
 
-#: src/Generic/AbstractModule.php:87
+#: Module.php:50
+msgid "The directory \"{directory}\" is not writeable."
+msgstr ""
+
+#: Module.php:102
 msgid ""
-"This module cannot install its tables, because they exist already. Try to "
-"remove them first."
+"Another job is running for the same process (job {link_job}#{job_id}"
+"{link_end}, {link_log}logs{link_end})."
 msgstr ""
 
-#: src/Generic/AbstractModule.php:328
-#, php-format
-msgid "The module removed tables \"%s\" from a previous broken install."
-msgstr ""
-
-#: src/Generic/AbstractModule.php:735
-#, php-format
-msgid "This module requires the module \"%1$s\", version %2$s or above."
-msgstr ""
-
-#: src/Generic/AbstractModule.php:832
-#, php-format
-msgid ""
-"The module \"%s\" was automatically deactivated because the dependencies are "
-"unavailable."
-msgstr ""
-
-#: Module.php:55 Module.php:204
-#, php-format
-msgid "The directory \"%s\" is not writeable."
-msgstr ""
-
-#: Module.php:93
-#, php-format
-msgid ""
-"Another job is running for the same process (job %1$s#%2$d%3$s, "
-"%4$slogs%3$s)."
-msgstr ""
-
-#: Module.php:125 src/Job/ZipFiles.php:37
+#: Module.php:138 src/Job/ZipFiles.php:61
 msgid "No zip to create."
 msgstr ""
 
-#: Module.php:142
-#, php-format
-msgid "Creating zips in background (job %1$s#%2$d%3$s, %4$slogs%3$s)."
+#: Module.php:157
+msgid ""
+"Creating zips in background (job {link_job}#{job_id}{link_end}, {link_log}"
+"logs{link_end})."
 msgstr ""
 
-#: Module.php:215
-#, php-format
-msgid "The directory \"%s\" is not writeable: %s."
+#: Module.php:221
+msgid "Zip: Store items and files as zip"
 msgstr ""
 
-#: src/Form/SettingsFieldset.php:10
-msgid "Zip resources"
+#: src/Job/ZipFiles.php:68
+msgid "Zipping files by items ({type})."
 msgstr ""
 
-#: src/Form/SettingsFieldset.php:20
-msgid "Number of original files to store by zip"
+#: src/Job/ZipFiles.php:73
+msgid ""
+"Zipping \"{type}\" files by item ended: {total} files created in folder "
+"{directory}."
 msgstr ""
 
-#: src/Form/SettingsFieldset.php:21 src/Form/SettingsFieldset.php:33
-#: src/Form/SettingsFieldset.php:45 src/Form/SettingsFieldset.php:57
-#: src/Form/SettingsFieldset.php:69
-msgid "Set 0 not to create the zip."
+#: src/Job/ZipFiles.php:80
+msgid "Zipping \"{type}\" files by {count}."
 msgstr ""
 
-#: src/Form/SettingsFieldset.php:32
-msgid "Number of large files to store by zip"
+#: src/Job/ZipFiles.php:85
+msgid ""
+"Zipping \"{type}\" files by {count} ended: {total} files created in folder "
+"files/zip."
 msgstr ""
 
-#: src/Form/SettingsFieldset.php:44
-msgid "Number of medium files to store by zip"
-msgstr ""
-
-#: src/Form/SettingsFieldset.php:56
-msgid "Number of square files to store by zip"
-msgstr ""
-
-#: src/Form/SettingsFieldset.php:68
-msgid "Number of asset files to store by zip"
-msgstr ""
-
-#: src/Form/SettingsFieldset.php:80
-msgid "Add file \"zipfiles.txt\" with the list of zip files"
-msgstr ""
-
-#: src/Form/SettingsFieldset.php:90
-msgid "Create the zip now"
-msgstr ""
-
-#: src/Job/ZipFiles.php:44
-#, php-format
-msgid "Zipping \"%s\" files by %s."
-msgstr ""
-
-#: src/Job/ZipFiles.php:49
-#, php-format
-msgid "Zipping \"%s\" files by %s ended: %d files created in folder files/zip."
-msgstr ""
-
-#: src/Job/ZipFiles.php:57
+#: src/Job/ZipFiles.php:93
 msgid "Added zip list in files/zip/ziplist.txt."
 msgstr ""
 
-#: src/Job/ZipFiles.php:62
+#: src/Job/ZipFiles.php:98
 msgid "Zipping ended."
 msgstr ""
 
-#: src/Job/ZipFiles.php:86
-#, php-format
-msgid "Zipping \"%s\" files stopped."
+#: src/Job/ZipFiles.php:126
+msgid "The file path {directory} is not a directory."
+msgstr ""
+
+#: src/Job/ZipFiles.php:136
+msgid "The directory {directory} for zip items cannot be created."
+msgstr ""
+
+#: src/Job/ZipFiles.php:145
+msgid "The directory {directory} for zip items is not writeable."
+msgstr ""
+
+#: src/Job/ZipFiles.php:167
+msgid "Zipping \"{type}\" files by item stopped at {count]/{total}."
+msgstr ""
+
+#: src/Job/ZipFiles.php:214
+msgid "For item #{item_id}, {count} \"{type}\" files are missing: #{media_ids}"
+msgstr ""
+
+#: src/Job/ZipFiles.php:244
+msgid "Zipping \"{type}\" files stopped."
+msgstr ""
+
+#: src/Form/SettingsFieldset.php:11
+msgid "Zip resources"
+msgstr ""
+
+#: src/Form/SettingsFieldset.php:14
+msgid "Zip"
+msgstr ""
+
+#: src/Form/SettingsFieldset.php:28
+msgid "Create a zip by item for derivatives"
+msgstr ""
+
+#: src/Form/SettingsFieldset.php:32
+msgid "Large"
+msgstr ""
+
+#: src/Form/SettingsFieldset.php:34
+msgid "Square"
+msgstr ""
+
+#: src/Form/SettingsFieldset.php:46
+msgid "Create a zip for original files: Number of files by zip"
+msgstr ""
+
+#: src/Form/SettingsFieldset.php:58
+msgid "Create a zip for large files: Number of files by zip"
+msgstr ""
+
+#: src/Form/SettingsFieldset.php:70
+msgid "Create a zip for medium files: Number of files by zip"
+msgstr ""
+
+#: src/Form/SettingsFieldset.php:82
+msgid "Create a zip for square files: Number of files by zip"
+msgstr ""
+
+#: src/Form/SettingsFieldset.php:94
+msgid "Create a zip for asset files: Number of files by zip"
+msgstr ""
+
+#: src/Form/SettingsFieldset.php:106
+msgid "Add file \"zipfiles.txt\" with the list of zip files"
+msgstr ""
+
+#: src/Form/SettingsFieldset.php:117
+msgid "Run background task to create zip files (or use EasyAdmin)"
 msgstr ""
