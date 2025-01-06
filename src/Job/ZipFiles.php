@@ -4,7 +4,6 @@ namespace Zip\Job;
 
 use Omeka\Job\AbstractJob;
 use ZipArchive;
-use Omeka\Stdlib\Message;
 
 class ZipFiles extends AbstractJob
 {
@@ -40,15 +39,15 @@ class ZipFiles extends AbstractJob
         }
 
         foreach ($zipBy as $type => $by) {
-            $this->logger->notice(new Message(
-                'Zipping "%s" files by %s.', // @translate
-                $type, $by
-            ));
+            $this->logger->notice(
+                'Zipping "{type}" files by {count}.', // @translate
+                ['type' => $type, 'count' => $by]
+            );
             $total = $this->zipFilesForType($type, (int) $by);
-            $this->logger->notice(new Message(
-                'Zipping "%s" files by %s ended: %d files created in folder files/zip.', // @translate
-                $type, $by, $total
-            ));
+            $this->logger->notice(
+                'Zipping "{type}" files by {count} ended: {total} files created in folder files/zip.', // @translate
+                ['type' => $type, 'count' => $by, 'total' => $total]
+            );
         }
 
         if ($this->getArg('zipList')) {
@@ -82,10 +81,10 @@ class ZipFiles extends AbstractJob
 
         foreach (array_chunk($filesList, $by) as $files) {
             if ($this->shouldStop()) {
-                $this->logger->warn(new Message(
-                    'Zipping "%s" files stopped.', // @translate
-                    $type
-                ));
+                $this->logger->warn(
+                    'Zipping "{type}" files stopped.', // @translate
+                    ['type' => $type]
+                );
                 foreach ($filesZip as $file) {
                     @unlink($file);
                 }
@@ -99,10 +98,10 @@ class ZipFiles extends AbstractJob
             $zip = new ZipArchive();
             $zip->open($filepath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
             $comment = <<<INI
-chunk = $index
-total_chunks = $totalChunks
-total_files = $totalFiles
-INI;
+                chunk = $index
+                total_chunks = $totalChunks
+                total_files = $totalFiles
+                INI;
             $zip->setArchiveComment($comment);
 
             foreach ($files as $file) {

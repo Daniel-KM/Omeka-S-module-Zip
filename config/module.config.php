@@ -5,7 +5,6 @@ namespace Zip;
 return [
     'form_elements' => [
         'invokables' => [
-            Form\Element\OptionalSelect::class => Form\Element\OptionalSelect::class,
             Form\SettingsFieldset::class => Form\SettingsFieldset::class,
         ],
     ],

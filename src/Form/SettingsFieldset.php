@@ -4,7 +4,6 @@ namespace Zip\Form;
 
 use Laminas\Form\Element;
 use Laminas\Form\Fieldset;
-use Zip\Form\Element as ZipElement;
 
 class SettingsFieldset extends Fieldset
 {

@@ -1,58 +1,54 @@
 <?php declare(strict_types=1);
 
-/*
- * Copyright Daniel Berthereau, 2021-2023
- *
- * This software is governed by the CeCILL license under French law and abiding
- * by the rules of distribution of free software.  You can use, modify and/ or
- * redistribute the software under the terms of the CeCILL license as circulated
- * by CEA, CNRS and INRIA at the following URL "http://www.cecill.info".
- *
- * As a counterpart to the access to the source code and rights to copy, modify
- * and redistribute granted by the license, users are provided only with a
- * limited warranty and the software's author, the holder of the economic
- * rights, and the successive licensors have only limited liability.
- *
- * In this respect, the user's attention is drawn to the risks associated with
- * loading, using, modifying and/or developing or reproducing the software by
- * the user in light of its specific status of free software, that may mean that
- * it is complicated to manipulate, and that also therefore means that it is
- * reserved for developers and experienced professionals having in-depth
- * computer knowledge. Users are therefore encouraged to load and test the
- * software's suitability as regards their requirements in conditions enabling
- * the security of their systems and/or data to be ensured and, more generally,
- * to use and operate it in the same conditions as regards security.
- *
- * The fact that you are presently reading this means that you have had
- * knowledge of the CeCILL license and that you accept its terms.
- */
-
 namespace Zip;
 
-if (!class_exists(\Generic\AbstractModule::class)) {
-    require file_exists(dirname(__DIR__) . '/Generic/AbstractModule.php')
-        ? dirname(__DIR__) . '/Generic/AbstractModule.php'
-        : __DIR__ . '/src/Generic/AbstractModule.php';
+if (!class_exists(\Common\TraitModule::class)) {
+    require_once dirname(__DIR__) . '/Common/TraitModule.php';
 }
 
-use Generic\AbstractModule;
+use Common\Stdlib\PsrMessage;
+use Common\TraitModule;
 use Laminas\EventManager\Event;
 use Laminas\EventManager\SharedEventManagerInterface;
 use Omeka\Module\Exception\ModuleCannotInstallException;
-use Omeka\Stdlib\Message;
+use Omeka\Module\AbstractModule;
 
+/**
+ * AnalyticsSnippet
+ *
+ * Add a snippet, generally a javascript tracker, in public or admin pages, and
+ * allows to track json and xml requests.
+ *
+ * @copyright Daniel Berthereau, 2021-2025
+ * @license http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.txt
+ */
 class Module extends AbstractModule
 {
-    public const NAMESPACE = __NAMESPACE__;
+    use TraitModule;
+
+    const NAMESPACE = __NAMESPACE__;
 
     protected function preInstall(): void
     {
+        $services = $this->getServiceLocator();
+        $plugins = $services->get('ControllerPluginManager');
+        $translate = $plugins->get('translate');
+
+        if (!method_exists($this, 'checkModuleActiveVersion') || !$this->checkModuleActiveVersion('Common', '3.4.65')) {
+            $message = new \Omeka\Stdlib\Message(
+                $translate('The module %1$s should be upgraded to version %2$s or later.'), // @translate
+                'Common', '3.4.65'
+            );
+            throw new \Omeka\Module\Exception\ModuleCannotInstallException((string) $message);
+        }
+
         $config = $this->getServiceLocator()->get('Config');
         $basePath = $config['file_store']['local']['base_path'] ?: (OMEKA_PATH . '/files');
+
         if (!$this->checkDestinationDir($basePath . '/zip')) {
-            $message = new Message(
-                'The directory "%s" is not writeable.', // @translate
-                $basePath . '/zip'
+            $message = new PsrMessage(
+                'The directory "{directory}" is not writeable.', // @translate
+                ['directory' => $basePath . '/zip']
             );
             throw new ModuleCannotInstallException((string) $message);
         }
@@ -90,21 +86,22 @@ class Module extends AbstractModule
         // Check if a zip job is already running before running a new one.
         $jobId = $this->checkJob(\Zip\Job\ZipFiles::class);
         if ($jobId) {
-            $message = new Message(
-                'Another job is running for the same process (job %1$s#%2$d%3$s, %4$slogs%3$s).', // @translate
-                sprintf(
-                    '<a href="%s">',
-                    htmlspecialchars($urlHelper('admin/id', ['controller' => 'job', 'id' => $jobId]))
-                ),
-                $jobId,
-                '</a>',
-                sprintf(
-                    '<a href="%s">',
-                    // Check if module Log is enabled (avoid issue when disabled).
-                    htmlspecialchars(class_exists(\Log\Stdlib\PsrMessage::class)
-                        ? $urlHelper('admin/log/default', [], ['query' => ['job_id' => $jobId]])
-                        : $urlHelper('admin/id', ['controller' => 'job', 'id' => $jobId, 'action' => 'log'])
-                ))
+            $message = new PsrMessage(
+                'Another job is running for the same process (job {link_job}#{job_id}{link_end}, {link_log}logs{link_end}).', // @translate
+                [
+                    'link_job' => sprintf(
+                        '<a href="%s">',
+                        htmlspecialchars($urlHelper('admin/id', ['controller' => 'job', 'id' => $jobId]))
+                    ),
+                    'job_id' => $jobId,
+                    'link_end' => '</a>',
+                    'link_log' => sprintf(
+                        '<a href="%s">',
+                        htmlspecialchars(class_exists(\Log\Module::class)
+                            ? $urlHelper('admin/log/default', [], ['query' => ['job_id' => $jobId]])
+                            : $urlHelper('admin/id', ['controller' => 'job', 'id' => $jobId, 'action' => 'log']))
+                        ),
+                ]
             );
             $message->setEscapeHtml(false);
             $messenger->addWarning($message);
@@ -123,8 +120,7 @@ class Module extends AbstractModule
         }
         $zipBy = array_filter(array_map('intval', $zipBy));
         if (!count($zipBy)) {
-            $message = new Message('No zip to create.'); // @translate
-            $message->setEscapeHtml(false);
+            $message = new PsrMessage('No zip to create.'); // @translate
             $messenger->addWarning($message);
             return;
         }
@@ -139,21 +135,22 @@ class Module extends AbstractModule
         ]);
         $jobId = $job->getId();
 
-        $message = new Message(
-            'Creating zips in background (job %1$s#%2$d%3$s, %4$slogs%3$s).', // @translate
-            sprintf(
-                '<a href="%s">',
-                htmlspecialchars($urlHelper('admin/id', ['controller' => 'job', 'id' => $jobId]))
-            ),
-            $jobId,
-            '</a>',
-            sprintf(
-                '<a href="%s">',
-                // Check if module Log is enabled (avoid issue when disabled).
-                htmlspecialchars(class_exists(\Log\Stdlib\PsrMessage::class)
-                    ? $urlHelper('admin/log/default', [], ['query' => ['job_id' => $jobId]])
-                    : $urlHelper('admin/id', ['controller' => 'job', 'id' => $jobId, 'action' => 'log'])
-            ))
+        $message = new PsrMessage(
+            'Creating zips in background (job {link_job}#{job_id}{link_end}, {link_log}logs{link_end}).', // @translate
+            [
+                'link_job' => sprintf(
+                    '<a href="%s">',
+                    htmlspecialchars($urlHelper('admin/id', ['controller' => 'job', 'id' => $jobId]))
+                    ),
+                'job_id' => $jobId,
+                'link_end' => '</a>',
+                'link_log' => sprintf(
+                    '<a href="%s">',
+                    htmlspecialchars(class_exists(\Log\Module::class)
+                        ? $urlHelper('admin/log/default', [], ['query' => ['job_id' => $jobId]])
+                        : $urlHelper('admin/id', ['controller' => 'job', 'id' => $jobId, 'action' => 'log']))
+                    ),
+            ]
         );
         $message->setEscapeHtml(false);
         $messenger->addSuccess($message);
@@ -165,12 +162,12 @@ class Module extends AbstractModule
     protected function checkJob(string $class): int
     {
         $sql = <<<SQL
-SELECT id, pid, status
-FROM job
-WHERE status IN ("starting", "stopping", "in_progress")
-    AND class = :class 
-ORDER BY id ASC;
-SQL;
+            SELECT id, pid, status
+            FROM job
+            WHERE status IN ("starting", "stopping", "in_progress")
+                AND class = :class
+            ORDER BY id ASC;
+            SQL;
 
         $connection = $this->getServiceLocator()->get('Omeka\EntityManager')->getConnection();
         $result = $connection->executeQuery($sql, ['class' => $class])->fetchAllAssociative();
@@ -189,35 +186,5 @@ SQL;
         }
 
         return 0;
-    }
-
-    /**
-     * Check or create the destination folder.
-     *
-     * @param string $dirPath Absolute path.
-     * @return string|null
-     */
-    protected function checkDestinationDir(string $dirPath): ?string
-    {
-        if (file_exists($dirPath)) {
-            if (!is_dir($dirPath) || !is_readable($dirPath) || !is_writeable($dirPath)) {
-                $this->getServiceLocator()->get('Omeka\Logger')->err(new Message(
-                    'The directory "%s" is not writeable.', // @translate
-                    $dirPath
-                ));
-                return null;
-            }
-            return $dirPath;
-        }
-
-        $result = @mkdir($dirPath, 0775, true);
-        if (!$result) {
-            $this->getServiceLocator()->get('Omeka\Logger')->err(new Message(
-                'The directory "%s" is not writeable: %s.', // @translate
-                $dirPath, error_get_last()['message']
-            ));
-            return null;
-        }
-        return $dirPath;
     }
 }
