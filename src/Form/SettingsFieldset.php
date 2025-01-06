@@ -2,6 +2,7 @@
 
 namespace Zip\Form;
 
+use Common\Form\Element as CommonElement;
 use Laminas\Form\Element;
 use Laminas\Form\Fieldset;
 
@@ -19,6 +20,24 @@ class SettingsFieldset extends Fieldset
         $this
             ->setAttribute('id', 'zip')
             ->setOption('element_groups', $this->elementGroups)
+            ->add([
+                'name' => 'zip_items',
+                'type' => CommonElement\OptionalRadio::class,
+                'options' => [
+                    'element_group' => 'zip',
+                    'label' => 'Create a zip by item for derivatives', // @translate
+                    'value_options' => [
+                        '' => 'No', // @translate
+                        'original' => 'Original', // @translate
+                        'large' => 'Large',  // @translate
+                        'medium' => 'Medium', // @translate
+                        'square' => 'Square', // @translate
+                    ],
+                ],
+                'attributes' => [
+                    'id' => 'zip_items',
+                ],
+            ])
             ->add([
                 'name' => 'zip_original',
                 'type' => Element\Number::class,
@@ -95,7 +114,7 @@ class SettingsFieldset extends Fieldset
                 'type' => Element\Checkbox::class,
                 'options' => [
                     'element_group' => 'zip',
-                    'label' => 'Run background task to create zip files', // @translate
+                    'label' => 'Run background task to create zip files (or use EasyAdmin)', // @translate
                 ],
                 'attributes' => [
                     'id' => 'zip_job',

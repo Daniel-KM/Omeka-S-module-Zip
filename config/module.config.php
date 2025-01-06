@@ -20,6 +20,7 @@ return [
     ],
     'zip' => [
         'settings' => [
+            'zip_items' => '',
             'zip_original' => 0,
             'zip_large' => 300,
             'zip_medium' => 2000,
