@@ -61,6 +61,18 @@ class Module extends AbstractModule
             'form.add_elements',
             [$this, 'handleMainSettings']
         );
+
+        // Add a job to upgrade structures once from v3.
+        $sharedEventManager->attach(
+            \EasyAdmin\Form\CheckAndFixForm::class,
+            'form.add_elements',
+            [$this, 'handleEasyAdminJobsForm']
+                );
+        $sharedEventManager->attach(
+            \EasyAdmin\Controller\Admin\CheckAndFixController::class,
+            'easyadmin.job',
+            [$this, 'handleEasyAdminJobs']
+        );
     }
 
     public function handleMainSettings(Event $event): void
@@ -118,9 +130,9 @@ class Module extends AbstractModule
             'asset' => 0,
         ];
         foreach (array_keys($zipBy) as $type) {
-            $zipBy[$type] = $settings->get('zip_' . $type, 0);
+            $zipBy[$type] = (int) $settings->get('zip_' . $type, 0);
         }
-        $zipBy = array_filter(array_map('intval', $zipBy));
+        $zipBy = array_filter($zipBy);
 
         if (!$zipItems && !count($zipBy)) {
             $message = new PsrMessage('No zip to create.'); // @translate
@@ -130,13 +142,15 @@ class Module extends AbstractModule
 
         $zipList = (bool) $settings->get('zip_list_zip');
 
-        // Run the job.
-        $dispatcher = $services->get(\Omeka\Job\Dispatcher::class);
-        $job = $dispatcher->dispatch(\Zip\Job\ZipFiles::class, [
+        $args = [
             'zip_items' => $zipItems,
             'zip_by' => $zipBy,
             'zip_list' => $zipList,
-        ]);
+        ];
+
+        // Run the job.
+        $dispatcher = $services->get(\Omeka\Job\Dispatcher::class);
+        $job = $dispatcher->dispatch(\Zip\Job\ZipFiles::class, $args);
         $jobId = $job->getId();
 
         $message = new PsrMessage(
@@ -190,5 +204,66 @@ class Module extends AbstractModule
         }
 
         return 0;
+    }
+
+    public function handleEasyAdminJobsForm(Event $event): void
+    {
+        /**
+         * @var \EasyAdmin\Form\CheckAndFixForm $form
+         * @var \Laminas\Form\Element\Radio $process
+         * @var \Laminas\Form\Fieldset $fieldset
+         * @var \Zip\Form\SettingsFieldset $settingsFieldset
+         */
+        $form = $event->getTarget();
+        $fieldset = $form->get('module_tasks');
+        $process = $fieldset->get('process');
+        $valueOptions = $process->getValueOptions();
+        $valueOptions['zip_zip'] = 'Zip: Store items and files as zip'; // @translate
+        $process->setValueOptions($valueOptions);
+
+        $settingsFieldset = $this->getServiceLocator()->get('FormElementManager')
+            ->get(\Zip\Form\SettingsFieldset::class)
+            ->setAttribute('id', 'zip_zip')
+            ->setAttribute('class', 'zip_zip')
+            ->setName('zip_zip')
+            ->remove('zip_job');
+
+        $settingsFieldset->get('zip_original')->setValue('0');
+        $settingsFieldset->get('zip_large')->setValue('0');
+        $settingsFieldset->get('zip_medium')->setValue('0');
+        $settingsFieldset->get('zip_square')->setValue('0');
+        $settingsFieldset->get('zip_asset')->setValue('0');
+
+        $fieldset
+            ->add($settingsFieldset);
+    }
+
+    public function handleEasyAdminJobs(Event $event): void
+    {
+        $process = $event->getParam('process');
+        if ($process === 'zip_zip') {
+            $params = $event->getParam('params');
+            $args = $params['module_tasks']['zip_zip'] ?? [];
+            $zipItems = $args['zip_items'] ?? null;
+            $zipBy = [
+                'original' => 0,
+                'large' => 0,
+                'medium' => 0,
+                'square' => 0,
+                'asset' => 0,
+            ];
+            foreach (array_keys($zipBy) as $type) {
+                $zipBy[$type] = (int) ($args['zip_' . $type] ?? 0);
+            }
+            $zipBy = array_filter($zipBy);
+            $zipList = !empty($args['zip_list_zip']);
+            $args = [
+                'zip_items' => $zipItems,
+                'zip_by' => $zipBy,
+                'zip_list' => $zipList,
+            ];
+            $event->setParam('job', \Zip\Job\ZipFiles::class);
+            $event->setParam('args', $args);
+        }
     }
 }

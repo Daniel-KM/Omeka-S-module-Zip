@@ -40,7 +40,7 @@ class SettingsFieldset extends Fieldset
             ])
             ->add([
                 'name' => 'zip_original',
-                'type' => Element\Number::class,
+                'type' => CommonElement\OptionalNumber::class,
                 'options' => [
                     'element_group' => 'zip',
                     'label' => 'Create a zip for original files: Number of files by zip', // @translate
@@ -52,7 +52,7 @@ class SettingsFieldset extends Fieldset
             ])
             ->add([
                 'name' => 'zip_large',
-                'type' => Element\Number::class,
+                'type' => CommonElement\OptionalNumber::class,
                 'options' => [
                     'element_group' => 'zip',
                     'label' => 'Create a zip for large files: Number of files by zip', // @translate
@@ -64,7 +64,7 @@ class SettingsFieldset extends Fieldset
             ])
             ->add([
                 'name' => 'zip_medium',
-                'type' => Element\Number::class,
+                'type' => CommonElement\OptionalNumber::class,
                 'options' => [
                     'element_group' => 'zip',
                     'label' => 'Create a zip for medium files: Number of files by zip', // @translate
@@ -76,7 +76,7 @@ class SettingsFieldset extends Fieldset
             ])
             ->add([
                 'name' => 'zip_square',
-                'type' => Element\Number::class,
+                'type' => CommonElement\OptionalNumber::class,
                 'options' => [
                     'element_group' => 'zip',
                     'label' => 'Create a zip for square files: Number of files by zip', // @translate
@@ -88,7 +88,7 @@ class SettingsFieldset extends Fieldset
             ])
             ->add([
                 'name' => 'zip_asset',
-                'type' => Element\Number::class,
+                'type' => CommonElement\OptionalNumber::class,
                 'options' => [
                     'element_group' => 'zip',
                     'label' => 'Create a zip for asset files: Number of files by zip', // @translate
