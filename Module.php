@@ -52,6 +52,14 @@ class Module extends AbstractModule
             );
             throw new ModuleCannotInstallException((string) $message);
         }
+
+        if (!$this->checkDestinationDir($basePath . '/zip_items')) {
+            $message = new PsrMessage(
+                'The directory "{directory}" is not writeable.', // @translate
+                ['directory' => $basePath . '/zip_items']
+            );
+            throw new ModuleCannotInstallException((string) $message);
+        }
     }
 
     public function attachListeners(SharedEventManagerInterface $sharedEventManager): void
