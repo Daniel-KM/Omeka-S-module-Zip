@@ -2,11 +2,28 @@
 
 namespace Zip\Job;
 
+use Doctrine\Common\Collections\Criteria;
+use Omeka\Entity\Job;
 use Omeka\Job\AbstractJob;
 use ZipArchive;
 
 class ZipFiles extends AbstractJob
 {
+    /**
+     * @var \Omeka\Api\Manager
+     */
+    protected $api;
+
+    /**
+     * @var \Doctrine\DBAL\Connection
+     */
+    protected $connection;
+
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    protected $entityManager;
+
     /**
      * @var \Laminas\Log\Logger
      */
@@ -27,15 +44,35 @@ class ZipFiles extends AbstractJob
 
         $this->logger = $services->get('Omeka\Logger');
         $this->logger->addProcessor($referenceIdProcessor);
-        $this->basePath = $this->config['file_store']['local']['base_path'] ?: (OMEKA_PATH . '/files');
 
-        $zipBy = $this->getArg('zipBy', []);
+        $config = $services->get('Config');
+        $this->basePath = $config['file_store']['local']['base_path'] ?: (OMEKA_PATH . '/files');
+
+        $this->api = $services->get('Omeka\ApiManager');
+        $this->connection = $services->get('Omeka\Connection');
+        $this->entityManager = $services->get('Omeka\EntityManager');
+
+        $zipItems = $this->getArg('zip_items') ?: null;
+        $zipBy = $this->getArg('zip_by', []);
         $zipBy = array_filter(array_map('intval', $zipBy));
-        if (!count($zipBy)) {
+
+        if (!$zipItems && !count($zipBy)) {
             $this->logger->warn(
                 'No zip to create.' // @translate
             );
             return;
+        }
+
+        if ($zipItems) {
+            $this->logger->notice(
+                'Zipping files by items ({type}).', // @translate
+                ['type' => $zipItems]
+            );
+            $total = $this->zipFilesByItemForType($zipItems);
+            $this->logger->notice(
+                'Zipping "{type}" files by item ended: {total} files created in folder {directory}.', // @translate
+                ['type' => $zipItems, 'total' => $total, 'directory' => basename($this->basePath) . '/zip_items']
+            );
         }
 
         foreach ($zipBy as $type => $by) {
@@ -60,6 +97,128 @@ class ZipFiles extends AbstractJob
         $this->logger->notice(
             'Zipping ended.' // @translate
         );
+    }
+
+    protected function zipFilesByItemForType(string $type): int
+    {
+        // Without advanced search, api cannot search items with files.
+        // $itemIds = $this->api->search('items', [], ['returnScalar' => 'id'])->getContent();
+        // $itemIds = array_keys($itemIds);
+
+        // TODO Fetch media ids and filenames directly one time?
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('item.id')
+            ->distinct()
+            ->from('item')
+            ->innerJoin('item', 'media', 'media', 'media.item_id = item.id')
+            ->where($qb->expr()->eq($type === 'original' ? 'has_original' : 'has_thumbnails', 1))
+            ->orderBy('item.id', 'ASC');
+        $itemIds = $this->connection->executeQuery($qb)->fetchFirstColumn();
+         if (!$itemIds) {
+            return 0;
+        }
+
+        $path = $this->basePath . '/zip_items';
+        if (file_exists($path) && !is_dir($path)) {
+            $this->job->setStatus(Job::STATUS_ERROR);
+            $this->logger->err(
+                'The file path {directory} is not a directory.', // @translate
+                ['directory' => basename($this->basePath) . '/zip_items']
+            );
+            ùf();
+            return 0;
+        } elseif (!file_exists($path)) {
+            $result = @mkdir($path, 0775, true);
+            if (!$result) {
+                $this->job->setStatus(Job::STATUS_ERROR);
+                $this->logger->err(
+                    'The directory {directory} for zip items cannot be created.', // @translate
+                    ['directory' => basename($this->basePath) . '/zip_items']
+                );
+                return 0;
+            }
+        } elseif (!is_writeable($path)) {
+            ùf();
+            $this->job->setStatus(Job::STATUS_ERROR);
+            $this->logger->err(
+                'The directory {directory} for zip items is not writeable.', // @translate
+                ['directory' => basename($this->basePath) . '/zip_items']
+            );
+            return 0;
+        }
+
+        // $basePathFileLength = mb_strlen($this->basePath . '/' . $type . '/');
+
+        $filter = $type === 'original' ? 'hasOriginal' : 'hasThumbnails';
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq($filter, 1))
+            ->orderBy(['position' => Criteria::ASC]);
+
+        /**
+         * @var \Omeka\Entity\Item $item
+         * @var \Doctrine\Common\Collections\Collection $medias
+         * @var \Omeka\Entity\Media $media
+         */
+        $index = 0;
+        foreach ($itemIds as $itemId) {
+            if ($this->shouldStop()) {
+                $this->logger->warn(
+                    'Zipping "{type}" files by item stopped at {count]/{total}.', // @translate
+                    ['type' => $type, 'count' => $index, 'total' => count($itemIds)]
+                );
+                return 0;
+            }
+            $item = $this->api->read('items', $itemId, [], ['responseContent' => 'resource'])->getContent();
+            $medias = $item->getMedia()->matching($criteria);
+            if ($medias->isEmpty()) {
+                continue;
+            }
+            $filepathZip = $this->basePath .'/zip_items/' . $itemId . '.' . $type . '.zip';
+            if (file_exists($filepathZip)) {
+                @unlink($filepathZip);
+            }
+            $zip = new ZipArchive();
+            $zip->open($filepathZip, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+            $comment = <<<INI
+                item = {$item->getId()}
+                type = $type
+                INI;
+            $zip->setArchiveComment($comment);
+
+            $countFiles = 0;
+            $unreadables = [];
+            foreach ($medias as $media) {
+                $storageId = $media->getStorageId();
+                $extension = $media->getExtension();
+                $dotExtension = $type === 'original' ? ($extension ? ".$extension" : '') : '.jpg';
+                $realFilename = $storageId . $dotExtension;
+                $filepath = $this->basePath . '/' . $type . '/' . $realFilename;
+                if (!file_exists($filepath) || !is_readable($filepath)) {
+                    $unreadables[] = $media->getId();
+                    continue;
+                }
+                // TODO Add an option to set the source name instead of the index (that is better than the hashed filename anyway) or the ArchiveRepertory name.
+                // Warning: if two files have the same position, it will be overridden, but it should not be possible.
+                $relativePath = sprintf('%1$d/%2$s/%3$04d%4$s', $itemId, $type, $media->getPosition(), $dotExtension);
+                $zip->addFile($filepath, $relativePath);
+                ++$countFiles;
+            }
+            if ($countFiles) {
+                $zip->close();
+            } elseif (file_exists($filepathZip)) {
+                @unlink($filepathZip);
+            }
+            if ($unreadables) {
+                $this->logger->warn(
+                    'For item #{item_id}, {count} "{type}" files are missing: #{media_ids}', // @translate
+                    ['item_id' => $itemId, 'count' => count($unreadables), 'type' => $type, 'media_ids' => implode(', #', $unreadables)]
+                );
+            }
+            ++$index;
+        }
+
+        return $index;
     }
 
     protected function zipFilesForType(string $type, int $by): int

@@ -65,7 +65,7 @@ class Module extends AbstractModule
 
     public function handleMainSettings(Event $event): void
     {
-        parent::handleMainSettings($event);
+        $this->handleAnySettings($event, 'settings');
 
         // Params are already checked.
         $services = $this->getServiceLocator();
@@ -108,6 +108,8 @@ class Module extends AbstractModule
             return;
         }
 
+        $zipItems = $settings->get('zip_items') ?: null;
+
         $zipBy = [
             'original' => 0,
             'large' => 0,
@@ -119,7 +121,8 @@ class Module extends AbstractModule
             $zipBy[$type] = $settings->get('zip_' . $type, 0);
         }
         $zipBy = array_filter(array_map('intval', $zipBy));
-        if (!count($zipBy)) {
+
+        if (!$zipItems && !count($zipBy)) {
             $message = new PsrMessage('No zip to create.'); // @translate
             $messenger->addWarning($message);
             return;
@@ -130,8 +133,9 @@ class Module extends AbstractModule
         // Run the job.
         $dispatcher = $services->get(\Omeka\Job\Dispatcher::class);
         $job = $dispatcher->dispatch(\Zip\Job\ZipFiles::class, [
-            'zipBy' => $zipBy,
-            'zipList' => $zipList,
+            'zip_items' => $zipItems,
+            'zip_by' => $zipBy,
+            'zip_list' => $zipList,
         ]);
         $jobId = $job->getId();
 
