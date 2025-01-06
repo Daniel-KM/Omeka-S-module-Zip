@@ -3,6 +3,7 @@
 namespace Zip;
 
 use Common\Stdlib\PsrMessage;
+use Omeka\Module\Exception\ModuleCannotInstallException;
 
 /**
  * @var Module $this
@@ -19,7 +20,7 @@ use Common\Stdlib\PsrMessage;
  */
 $plugins = $services->get('ControllerPluginManager');
 $api = $plugins->get('api');
-// $config = $services->get('Config');
+$config = $services->get('Config');
 $settings = $services->get('Omeka\Settings');
 $translate = $plugins->get('translate');
 // $translator = $services->get('MvcTranslator');
@@ -40,6 +41,22 @@ if (version_compare($oldVersion, '3.4.0.3', '<')) {
 
     $message = new PsrMessage(
         'It is now possible to store resources separately with files.' // @translate
+    );
+    $messenger->addSuccess($message);
+}
+
+if (version_compare($oldVersion, '3.4.3', '<')) {
+    $basePath = $config['file_store']['local']['base_path'] ?: (OMEKA_PATH . '/files');
+    if (!$this->checkDestinationDir($basePath . '/zip_items')) {
+        $message = new PsrMessage(
+            'The directory "{directory}" is not writeable.', // @translate
+            ['directory' => $basePath . '/zip_items']
+        );
+        throw new ModuleCannotInstallException((string) $message);
+    }
+
+    $message = new PsrMessage(
+        'It is now possible to store zip by item.' // @translate
     );
     $messenger->addSuccess($message);
 }
