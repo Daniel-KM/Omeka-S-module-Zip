@@ -2,8 +2,11 @@ Zip (module for Omeka S)
 ========================
 
 [Zip] is a module for [Omeka S] that allows to create zip of resources (record +
-media files) that the visitor can download, and zip of files directories for
-backup purpose.
+media files) and zip of files directories for backup purpose.
+
+Even if zip files may be made available for visitors, this module is admin
+oriented. For a similar feature more usable for visitor, the module [Derivative Media]
+is recommended.
 
 
 Installation
@@ -88,7 +91,7 @@ of the CeCILL license and that you accept its terms.
 Copyright
 ---------
 
-* Copyright Daniel Berthereau, 2017-2023 [Daniel-KM] on GitLab)
+* Copyright Daniel Berthereau, 2021-2025 [Daniel-KM] on GitLab)
 
 The admin part has been built for the project [Watau] and the public part has
 been built for the digital library [Explore] of [Université PSL] (Paris Sciences & Lettres).
@@ -96,6 +99,7 @@ been built for the digital library [Explore] of [Université PSL] (Paris Science
 
 [Zip]: https://gitlab.com/Daniel-KM/Omeka-S-module-Zip
 [Omeka S]: https://omeka.org/s
+[Derivative Media]: https://gitlab.com/Daniel-KM/Omeka-S-module-DerivativeMedia
 [installing a module]: https://omeka.org/s/docs/user-manual/modules/#installing-modules
 [Zip.zip]: https://github.com/Daniel-KM/Omeka-S-module-Zip/-/releases
 [module issues]: https://gitlab.com/Daniel-KM/Omeka-S-module-Zip/-/issues
