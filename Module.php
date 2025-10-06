@@ -2,7 +2,7 @@
 
 namespace Zip;
 
-if (!class_exists(\Common\TraitModule::class)) {
+if (!class_exists('Common\TraitModule', false)) {
     require_once dirname(__DIR__) . '/Common/TraitModule.php';
 }
 
@@ -10,14 +10,13 @@ use Common\Stdlib\PsrMessage;
 use Common\TraitModule;
 use Laminas\EventManager\Event;
 use Laminas\EventManager\SharedEventManagerInterface;
-use Omeka\Module\Exception\ModuleCannotInstallException;
 use Omeka\Module\AbstractModule;
+use Omeka\Module\Exception\ModuleCannotInstallException;
 
 /**
- * AnalyticsSnippet
+ * Zip.
  *
- * Add a snippet, generally a javascript tracker, in public or admin pages, and
- * allows to track json and xml requests.
+ * Create a zip of specified files.
  *
  * @copyright Daniel Berthereau, 2021-2025
  * @license http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.txt
@@ -75,7 +74,7 @@ class Module extends AbstractModule
             \EasyAdmin\Form\CheckAndFixForm::class,
             'form.add_elements',
             [$this, 'handleEasyAdminJobsForm']
-                );
+        );
         $sharedEventManager->attach(
             \EasyAdmin\Controller\Admin\CheckAndFixController::class,
             'easyadmin.job',
@@ -96,7 +95,7 @@ class Module extends AbstractModule
         }
     }
 
-    protected function prepareZip()
+    protected function prepareZip(): void
     {
         $services = $this->getServiceLocator();
         $settings = $services->get('Omeka\Settings');
@@ -115,12 +114,9 @@ class Module extends AbstractModule
                     ),
                     'job_id' => $jobId,
                     'link_end' => '</a>',
-                    'link_log' => sprintf(
-                        '<a href="%s">',
-                        htmlspecialchars(class_exists(\Log\Module::class)
-                            ? $urlHelper('admin/log/default', [], ['query' => ['job_id' => $jobId]])
-                            : $urlHelper('admin/id', ['controller' => 'job', 'id' => $jobId, 'action' => 'log']))
-                        ),
+                    'link_log' => class_exists('Log\Module', false)
+                        ? sprintf('<a href="%1$s">', $urlHelper('admin/default', ['controller' => 'log'], ['query' => ['job_id' => $jobId]]))
+                        : sprintf('<a href="%1$s" target="_blank">', $urlHelper('admin/id', ['controller' => 'job', 'action' => 'log', 'id' => $jobId])),
                 ]
             );
             $message->setEscapeHtml(false);
@@ -167,15 +163,12 @@ class Module extends AbstractModule
                 'link_job' => sprintf(
                     '<a href="%s">',
                     htmlspecialchars($urlHelper('admin/id', ['controller' => 'job', 'id' => $jobId]))
-                    ),
+                ),
                 'job_id' => $jobId,
                 'link_end' => '</a>',
-                'link_log' => sprintf(
-                    '<a href="%s">',
-                    htmlspecialchars(class_exists(\Log\Module::class)
-                        ? $urlHelper('admin/log/default', [], ['query' => ['job_id' => $jobId]])
-                        : $urlHelper('admin/id', ['controller' => 'job', 'id' => $jobId, 'action' => 'log']))
-                    ),
+                'link_log' => class_exists('Log\Module', false)
+                    ? sprintf('<a href="%1$s">', $urlHelper('admin/default', ['controller' => 'log'], ['query' => ['job_id' => $job->getId()]]))
+                    : sprintf('<a href="%1$s" target="_blank">', $urlHelper('admin/id', ['controller' => 'job', 'action' => 'log', 'id' => $job->getId()])),
             ]
         );
         $message->setEscapeHtml(false);

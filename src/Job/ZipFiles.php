@@ -65,25 +65,25 @@ class ZipFiles extends AbstractJob
 
         if ($zipItems) {
             $this->logger->notice(
-                'Zipping files by items ({type}).', // @translate
-                ['type' => $zipItems]
+                'Zipping files by items ({format}).', // @translate
+                ['format' => $zipItems]
             );
             $total = $this->zipFilesByItemForType($zipItems);
             $this->logger->notice(
-                'Zipping "{type}" files by item ended: {total} files created in folder {directory}.', // @translate
-                ['type' => $zipItems, 'total' => $total, 'directory' => basename($this->basePath) . '/zip_items']
+                'Zipping "{format}" files by item ended: {total} files created in folder {directory}.', // @translate
+                ['format' => $zipItems, 'total' => $total, 'directory' => basename($this->basePath) . '/zip_items']
             );
         }
 
-        foreach ($zipBy as $type => $by) {
+        foreach ($zipBy as $format => $by) {
             $this->logger->notice(
-                'Zipping "{type}" files by {count}.', // @translate
-                ['type' => $type, 'count' => $by]
+                'Zipping "{format}" files by {count}.', // @translate
+                ['format' => $format, 'count' => $by]
             );
-            $total = $this->zipFilesForType($type, (int) $by);
+            $total = $this->zipFilesForType($format, (int) $by);
             $this->logger->notice(
-                'Zipping "{type}" files by {count} ended: {total} files created in folder files/zip.', // @translate
-                ['type' => $type, 'count' => $by, 'total' => $total]
+                'Zipping "{format}" files by {count} ended: {total} files created in folder files/zip.', // @translate
+                ['format' => $format, 'count' => $by, 'total' => $total]
             );
         }
 
@@ -99,7 +99,7 @@ class ZipFiles extends AbstractJob
         );
     }
 
-    protected function zipFilesByItemForType(string $type): int
+    protected function zipFilesByItemForType(string $format): int
     {
         // Without advanced search, api cannot search items with files.
         // $itemIds = $this->api->search('items', [], ['returnScalar' => 'id'])->getContent();
@@ -112,10 +112,10 @@ class ZipFiles extends AbstractJob
             ->distinct()
             ->from('item')
             ->innerJoin('item', 'media', 'media', 'media.item_id = item.id')
-            ->where($qb->expr()->eq($type === 'original' ? 'has_original' : 'has_thumbnails', 1))
+            ->where($qb->expr()->eq($format === 'original' ? 'has_original' : 'has_thumbnails', 1))
             ->orderBy('item.id', 'ASC');
         $itemIds = $this->connection->executeQuery($qb)->fetchFirstColumn();
-         if (!$itemIds) {
+        if (!$itemIds) {
             return 0;
         }
 
@@ -146,9 +146,9 @@ class ZipFiles extends AbstractJob
             return 0;
         }
 
-        // $basePathFileLength = mb_strlen($this->basePath . '/' . $type . '/');
+        // $basePathFileLength = mb_strlen($this->basePath . '/' . $format . '/');
 
-        $filter = $type === 'original' ? 'hasOriginal' : 'hasThumbnails';
+        $filter = $format === 'original' ? 'hasOriginal' : 'hasThumbnails';
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq($filter, 1))
             ->orderBy(['position' => Criteria::ASC]);
@@ -162,8 +162,8 @@ class ZipFiles extends AbstractJob
         foreach ($itemIds as $itemId) {
             if ($this->shouldStop()) {
                 $this->logger->warn(
-                    'Zipping "{type}" files by item stopped at {count]/{total}.', // @translate
-                    ['type' => $type, 'count' => $index, 'total' => count($itemIds)]
+                    'Zipping "{format}" files by item stopped at {count]/{total}.', // @translate
+                    ['format' => $format, 'count' => $index, 'total' => count($itemIds)]
                 );
                 return 0;
             }
@@ -172,7 +172,7 @@ class ZipFiles extends AbstractJob
             if ($medias->isEmpty()) {
                 continue;
             }
-            $filepathZip = $this->basePath .'/zip_items/' . $itemId . '.' . $type . '.zip';
+            $filepathZip = $this->basePath . '/zip_items/' . $itemId . '. ' . $format . '.zip';
             if (file_exists($filepathZip)) {
                 @unlink($filepathZip);
             }
@@ -180,7 +180,7 @@ class ZipFiles extends AbstractJob
             $zip->open($filepathZip, ZipArchive::CREATE | ZipArchive::OVERWRITE);
             $comment = <<<INI
                 item = {$item->getId()}
-                type = $type
+                type = $format
                 INI;
             $zip->setArchiveComment($comment);
 
@@ -189,16 +189,16 @@ class ZipFiles extends AbstractJob
             foreach ($medias as $media) {
                 $storageId = $media->getStorageId();
                 $extension = $media->getExtension();
-                $dotExtension = $type === 'original' ? ($extension ? ".$extension" : '') : '.jpg';
+                $dotExtension = $format === 'original' ? ($extension ? ".$extension" : '') : '.jpg';
                 $realFilename = $storageId . $dotExtension;
-                $filepath = $this->basePath . '/' . $type . '/' . $realFilename;
+                $filepath = $this->basePath . '/' . $format . '/' . $realFilename;
                 if (!file_exists($filepath) || !is_readable($filepath)) {
                     $unreadables[] = $media->getId();
                     continue;
                 }
                 // TODO Add an option to set the source name instead of the index (that is better than the hashed filename anyway) or the ArchiveRepertory name.
                 // Warning: if two files have the same position, it will be overridden, but it should not be possible.
-                $relativePath = sprintf('%1$d/%2$s/%3$04d%4$s', $itemId, $type, $media->getPosition(), $dotExtension);
+                $relativePath = sprintf('%1$d/%2$s/%3$04d%4$s', $itemId, $format, $media->getPosition(), $dotExtension);
                 $zip->addFile($filepath, $relativePath);
                 ++$countFiles;
             }
@@ -209,8 +209,8 @@ class ZipFiles extends AbstractJob
             }
             if ($unreadables) {
                 $this->logger->warn(
-                    'For item #{item_id}, {count} "{type}" files are missing: #{media_ids}', // @translate
-                    ['item_id' => $itemId, 'count' => count($unreadables), 'type' => $type, 'media_ids' => implode(', #', $unreadables)]
+                    'For item #{item_id}, {count} "{format}" files are missing: #{media_ids}', // @translate
+                    ['item_id' => $itemId, 'count' => count($unreadables), 'format' => $format, 'media_ids' => implode(', #', $unreadables)]
                 );
             }
             ++$index;
@@ -219,19 +219,19 @@ class ZipFiles extends AbstractJob
         return $index;
     }
 
-    protected function zipFilesForType(string $type, int $by): int
+    protected function zipFilesForType(string $format, int $by): int
     {
         // Get the full list of files inside the specified directory.
-        $path = $this->basePath . '/' . $type;
-        $filesList= $this->listFilesInFolder($path, true);
+        $path = $this->basePath . '/' . $format;
+        $filesList = $this->listFilesInFolder($path, true);
         $totalFiles = count($filesList);
 
         // Batch zip the resources in chunks.
         $filesZip = [];
         $index = 0;
         $indexFile = 1;
-        $baseFilename = $this->basePath .'/zip/tmp/' . $type . '_';
-        $finalBaseFilename = $this->basePath .'/zip/' . $type . '_';
+        $baseFilename = $this->basePath . '/zip/tmp/' . $format . '_';
+        $finalBaseFilename = $this->basePath . '/zip/' . $format . '_';
         $totalChunks = (int) ceil(count($filesList) / $by);
 
         @mkdir(dirname($baseFilename), 0775, true);
@@ -239,8 +239,8 @@ class ZipFiles extends AbstractJob
         foreach (array_chunk($filesList, $by) as $files) {
             if ($this->shouldStop()) {
                 $this->logger->warn(
-                    'Zipping "{type}" files stopped.', // @translate
-                    ['type' => $type]
+                    'Zipping "{format}" files stopped.', // @translate
+                    ['format' => $format]
                 );
                 foreach ($filesZip as $file) {
                     @unlink($file);
@@ -262,7 +262,7 @@ class ZipFiles extends AbstractJob
             $zip->setArchiveComment($comment);
 
             foreach ($files as $file) {
-                $relativePath = $type . '/' . mb_substr($file, mb_strlen($path) + 1);
+                $relativePath = $format . '/' . mb_substr($file, mb_strlen($path) + 1);
                 $zip->addFile($file, $relativePath);
                 ++$indexFile;
             }
@@ -272,7 +272,7 @@ class ZipFiles extends AbstractJob
 
         // Remove all old zip files for this type.
         $removeList = glob($finalBaseFilename . '*.zip');
-        $removeList[] = $this->basePath .'/zip/zipfiles.txt';
+        $removeList[] = $this->basePath . '/zip/zipfiles.txt';
         foreach ($removeList as $file) {
             @unlink($file);
         }
@@ -288,10 +288,8 @@ class ZipFiles extends AbstractJob
     protected function addZipList(): void
     {
         $length = mb_strlen($this->basePath) + 1;
-        $list = implode("\n", array_map(function($v) use ($length) {
-            return mb_substr($v, $length);
-        }, glob($this->basePath .'/zip/*.zip')));
-        file_put_contents($this->basePath .'/zip/zipfiles.txt', $list);
+        $list = implode("\n", array_map(fn ($v) => mb_substr($v, $length), glob($this->basePath . '/zip/*.zip')));
+        file_put_contents($this->basePath . '/zip/zipfiles.txt', $list);
     }
 
     /**
