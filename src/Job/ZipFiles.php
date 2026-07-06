@@ -115,7 +115,7 @@ class ZipFiles extends AbstractJob
             ->innerJoin('item', 'media', 'media', 'media.item_id = item.id')
             ->where($qb->expr()->eq('media.' . $column, 1))
             ->orderBy('item.id', 'ASC');
-        $itemIds = $this->connection->executeQuery($qb)->fetchFirstColumn();
+        $itemIds = $this->connection->executeQuery($qb->getSQL())->fetchFirstColumn();
 
         if ($this->getArg('zip_items_include_digital_objects') && $this->hasDigitalObjectEntity()) {
             $sql = <<<SQL
