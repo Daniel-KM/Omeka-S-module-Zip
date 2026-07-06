@@ -24,7 +24,7 @@ use Omeka\Module\Exception\ModuleCannotInstallException;
  *
  * Create a zip of specified files.
  *
- * @copyright Daniel Berthereau, 2021-2025
+ * @copyright Daniel Berthereau, 2021-2026
  * @license http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.txt
  */
 class Module extends AbstractModule
@@ -37,15 +37,17 @@ class Module extends AbstractModule
     {
         $services = $this->getServiceLocator();
         $plugins = $services->get('ControllerPluginManager');
-        $translate = $plugins->get('translate');
+        $translator = $services->get('MvcTranslator');
 
         if (!method_exists($this, 'checkModuleActiveVersion') || !$this->checkModuleActiveVersion('Common', '3.4.87')) {
             $message = new \Omeka\Stdlib\Message(
-                $translate('The module %1$s should be upgraded to version %2$s or later.'), // @translate
+                $translator->translate('The module %1$s should be upgraded to version %2$s or later.'), // @translate
                 'Common', '3.4.87'
             );
             throw new \Omeka\Module\Exception\ModuleCannotInstallException((string) $message);
         }
+
+        $errors = [];
 
         $config = $this->getServiceLocator()->get('Config');
         $basePath = $config['file_store']['local']['base_path'] ?: (OMEKA_PATH . '/files');
@@ -55,7 +57,7 @@ class Module extends AbstractModule
                 'The directory "{directory}" is not writeable.', // @translate
                 ['directory' => $basePath . '/zip']
             );
-            throw new ModuleCannotInstallException((string) $message);
+            $errors[] = (string) $message;
         }
 
         if (!$this->checkDestinationDir($basePath . '/zip_items')) {
@@ -63,7 +65,11 @@ class Module extends AbstractModule
                 'The directory "{directory}" is not writeable.', // @translate
                 ['directory' => $basePath . '/zip_items']
             );
-            throw new ModuleCannotInstallException((string) $message);
+            $errors[] = (string) $message;
+        }
+
+        if ($errors) {
+            throw new ModuleCannotInstallException(implode("\n", $errors));
         }
     }
 

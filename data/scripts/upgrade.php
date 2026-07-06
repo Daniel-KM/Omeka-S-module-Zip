@@ -33,7 +33,8 @@ if (!method_exists($this, 'checkModuleActiveVersion') || !$this->checkModuleActi
         $translate('The module %1$s should be upgraded to version %2$s or later.'), // @translate
         'Common', '3.4.87'
     );
-    throw new \Omeka\Module\Exception\ModuleCannotInstallException((string) $message);
+    $messenger->addError($message);
+    throw new \Omeka\Module\Exception\ModuleCannotInstallException((string) $translate('Missing requirement. Unable to upgrade.')); // @translate
 }
 
 if (version_compare($oldVersion, '3.4.0.3', '<')) {
@@ -52,7 +53,8 @@ if (version_compare($oldVersion, '3.4.3', '<')) {
             'The directory "{directory}" is not writeable.', // @translate
             ['directory' => $basePath . '/zip_items']
         );
-        throw new ModuleCannotInstallException((string) $message);
+        $messenger->addError($message);
+        throw new \Omeka\Module\Exception\ModuleCannotInstallException((string) $translate('Missing requirement. Unable to upgrade.')); // @translate
     }
 
     $message = new PsrMessage(
