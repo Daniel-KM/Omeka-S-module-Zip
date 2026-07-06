@@ -91,7 +91,7 @@ of the CeCILL license and that you accept its terms.
 Copyright
 ---------
 
-* Copyright Daniel Berthereau, 2021-2025 [Daniel-KM] on GitLab)
+* Copyright Daniel Berthereau, 2021-2026 [Daniel-KM] on GitLab)
 
 The admin part has been built for the project [Watau] and the public part has
 been built for the digital library [Explore] of [Université PSL] (Paris Sciences & Lettres).
