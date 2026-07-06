@@ -223,6 +223,18 @@ class Module extends AbstractModule
         $valueOptions['zip_zip'] = 'Zip: Store items and files as zip'; // @translate
         $process->setValueOptions($valueOptions);
 
+        if (method_exists($form, 'addTaskSubjects')) {
+            $form->addTaskSubjects([
+                'zip_zip' => [
+                    'name' => 'Zip items and files', // @translate
+                    'description' => 'Store items and their files as zip archives.', // @translate
+                    'actions' => [
+                        'zip_zip' => 'Store', // @translate
+                    ],
+                ],
+            ]);
+        }
+
         $settingsFieldset = $this->getServiceLocator()->get('FormElementManager')
             ->get(\Zip\Form\SettingsFieldset::class)
             ->setAttribute('id', 'zip_zip')
