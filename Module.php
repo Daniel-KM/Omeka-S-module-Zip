@@ -114,15 +114,12 @@ class Module extends AbstractModule
             $message = new PsrMessage(
                 'Another job is running for the same process (job {link_job}#{job_id}{link_end}, {link_log}logs{link_end}).', // @translate
                 [
-                    'link_job' => sprintf(
-                        '<a href="%s">',
-                        htmlspecialchars($urlHelper('admin/id', ['controller' => 'job', 'id' => $jobId]))
-                    ),
+                    'link_job' => sprintf('<a href="%s">', htmlspecialchars($urlHelper('admin/id', ['controller' => 'job', 'id' => $jobId]))),
                     'job_id' => $jobId,
                     'link_end' => '</a>',
                     'link_log' => class_exists('Log\Module', false)
-                        ? sprintf('<a href="%1$s">', $urlHelper('admin/default', ['controller' => 'log'], ['query' => ['job_id' => $jobId]]))
-                        : sprintf('<a href="%1$s" target="_blank">', $urlHelper('admin/id', ['controller' => 'job', 'action' => 'log', 'id' => $jobId])),
+                        ? sprintf('<a href="%1$s">', htmlspecialchars($urlHelper('admin/default', ['controller' => 'log'], ['query' => ['job_id' => $jobId]])))
+                        : sprintf('<a href="%1$s" target="_blank" rel="noopener noreferrer">', htmlspecialchars($urlHelper('admin/id', ['controller' => 'job', 'action' => 'log', 'id' => $jobId]))),
                 ]
             );
             $message->setEscapeHtml(false);
@@ -167,15 +164,12 @@ class Module extends AbstractModule
         $message = new PsrMessage(
             'Creating zips in background (job {link_job}#{job_id}{link_end}, {link_log}logs{link_end}).', // @translate
             [
-                'link_job' => sprintf(
-                    '<a href="%s">',
-                    htmlspecialchars($urlHelper('admin/id', ['controller' => 'job', 'id' => $jobId]))
-                ),
+                'link_job' => sprintf('<a href="%s">', htmlspecialchars($urlHelper('admin/id', ['controller' => 'job', 'id' => $jobId]))),
                 'job_id' => $jobId,
                 'link_end' => '</a>',
                 'link_log' => class_exists('Log\Module', false)
-                    ? sprintf('<a href="%1$s">', $urlHelper('admin/default', ['controller' => 'log'], ['query' => ['job_id' => $job->getId()]]))
-                    : sprintf('<a href="%1$s" target="_blank">', $urlHelper('admin/id', ['controller' => 'job', 'action' => 'log', 'id' => $job->getId()])),
+                    ? sprintf('<a href="%1$s">', htmlspecialchars($urlHelper('admin/default', ['controller' => 'log'], ['query' => ['job_id' => $job->getId()]])))
+                    : sprintf('<a href="%1$s" target="_blank" rel="noopener noreferrer">', htmlspecialchars($urlHelper('admin/id', ['controller' => 'job', 'action' => 'log', 'id' => $job->getId()]))),
             ]
         );
         $message->setEscapeHtml(false);
