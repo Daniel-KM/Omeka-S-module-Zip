@@ -21,6 +21,7 @@ return [
     'zip' => [
         'settings' => [
             'zip_items' => '',
+            'zip_items_include_digital_objects' => false,
             'zip_original' => 0,
             'zip_large' => 300,
             'zip_medium' => 2000,

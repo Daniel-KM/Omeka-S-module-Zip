@@ -39,6 +39,18 @@ class SettingsFieldset extends Fieldset
                 ],
             ])
             ->add([
+                'name' => 'zip_items_include_digital_objects',
+                'type' => Element\Checkbox::class,
+                'options' => [
+                    'element_group' => 'zip',
+                    'label' => 'Include digital objects referenced by item in the per-item zip', // @translate
+                    'info' => 'When enabled and the module DigitalObject is active, digital objects linked to an item via property values are added to the item zip.', // @translate
+                ],
+                'attributes' => [
+                    'id' => 'zip_items_include_digital_objects',
+                ],
+            ])
+            ->add([
                 'name' => 'zip_original',
                 'type' => CommonElement\OptionalNumber::class,
                 'options' => [

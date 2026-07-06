@@ -150,6 +150,7 @@ class Module extends AbstractModule
             'zip_items' => $zipItems,
             'zip_by' => $zipBy,
             'zip_list' => $zipList,
+            'zip_items_include_digital_objects' => (bool) $settings->get('zip_items_include_digital_objects'),
         ];
 
         // Run the job.
@@ -245,6 +246,7 @@ class Module extends AbstractModule
         if ($process === 'zip_zip') {
             $params = $event->getParam('params');
             $args = $params['module_tasks']['zip_zip'] ?? [];
+            $sourceArgs = $args;
             $zipItems = $args['zip_items'] ?? null;
             $zipBy = [
                 'original' => 0,
@@ -262,6 +264,7 @@ class Module extends AbstractModule
                 'zip_items' => $zipItems,
                 'zip_by' => $zipBy,
                 'zip_list' => $zipList,
+                'zip_items_include_digital_objects' => !empty($sourceArgs['zip_items_include_digital_objects']),
             ];
             $event->setParam('job', \Zip\Job\ZipFiles::class);
             $event->setParam('args', $args);

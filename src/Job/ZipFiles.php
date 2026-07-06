@@ -106,15 +106,39 @@ class ZipFiles extends AbstractJob
         // $itemIds = array_keys($itemIds);
 
         // TODO Fetch media ids and filenames directly one time?
+        $column = $format === 'original' ? 'has_original' : 'has_thumbnails';
         $qb = $this->connection->createQueryBuilder();
         $qb
             ->select('item.id')
             ->distinct()
             ->from('item')
             ->innerJoin('item', 'media', 'media', 'media.item_id = item.id')
-            ->where($qb->expr()->eq($format === 'original' ? 'has_original' : 'has_thumbnails', 1))
+            ->where($qb->expr()->eq('media.' . $column, 1))
             ->orderBy('item.id', 'ASC');
         $itemIds = $this->connection->executeQuery($qb)->fetchFirstColumn();
+
+        if ($this->getArg('zip_items_include_digital_objects') && $this->hasDigitalObjectEntity()) {
+            $sql = <<<SQL
+                SELECT DISTINCT v.resource_id
+                FROM value v
+                INNER JOIN digital_object do ON do.id = v.value_resource_id
+                INNER JOIN item i ON i.id = v.resource_id
+                WHERE do.{$column} = 1
+                    AND do.storage_id IS NOT NULL
+                SQL;
+            try {
+                $itemsWithDo = $this->connection->executeQuery($sql)->fetchFirstColumn();
+                $itemIds = array_values(array_unique(array_merge($itemIds, $itemsWithDo)));
+                sort($itemIds);
+            } catch (\Throwable $e) {
+                // Ignore: table structure may differ; log and continue.
+                $this->logger->warn(
+                    'Unable to collect items with digital objects: {message}', // @translate
+                    ['message' => $e->getMessage()]
+                );
+            }
+        }
+
         if (!$itemIds) {
             return 0;
         }
@@ -153,6 +177,9 @@ class ZipFiles extends AbstractJob
             ->where(Criteria::expr()->eq($filter, 1))
             ->orderBy(['position' => Criteria::ASC]);
 
+        $includeDigitalObjects = (bool) $this->getArg('zip_items_include_digital_objects')
+            && $this->hasDigitalObjectEntity();
+
         /**
          * @var \Omeka\Entity\Item $item
          * @var \Doctrine\Common\Collections\Collection $medias
@@ -169,7 +196,7 @@ class ZipFiles extends AbstractJob
             }
             $item = $this->api->read('items', $itemId, [], ['responseContent' => 'resource'])->getContent();
             $medias = $item->getMedia()->matching($criteria);
-            if ($medias->isEmpty()) {
+            if ($medias->isEmpty() && !$includeDigitalObjects) {
                 continue;
             }
             $filepathZip = $this->basePath . '/zip_items/' . $itemId . '. ' . $format . '.zip';
@@ -202,6 +229,10 @@ class ZipFiles extends AbstractJob
                 $zip->addFile($filepath, $relativePath);
                 ++$countFiles;
             }
+            if ($includeDigitalObjects) {
+                $countFiles += $this->addDigitalObjectsToZip($zip, $itemId, $format, $unreadables);
+            }
+
             if ($countFiles) {
                 $zip->close();
             } elseif (file_exists($filepathZip)) {
@@ -217,6 +248,70 @@ class ZipFiles extends AbstractJob
         }
 
         return $index;
+    }
+
+    /**
+     * Check that the DigitalObject entity/table is available.
+     */
+    protected function hasDigitalObjectEntity(): bool
+    {
+        try {
+            return (bool) $this->connection->executeQuery(
+                'SHOW TABLES LIKE "digital_object"'
+            )->fetchOne();
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Add digital objects referenced by an item (via property values) to the
+     * per-item zip. Returns the number of files added.
+     */
+    protected function addDigitalObjectsToZip(
+        ZipArchive $zip,
+        int $itemId,
+        string $format,
+        array &$unreadables
+    ): int {
+        $column = $format === 'original' ? 'has_original' : 'has_thumbnails';
+        $sql = <<<SQL
+            SELECT DISTINCT do.id, do.storage_id, do.extension
+            FROM digital_object do
+            INNER JOIN value v ON v.value_resource_id = do.id
+            WHERE v.resource_id = :item_id
+                AND do.{$column} = 1
+                AND do.storage_id IS NOT NULL
+            ORDER BY do.id ASC
+            SQL;
+        try {
+            $rows = $this->connection->executeQuery($sql, ['item_id' => $itemId])->fetchAllAssociative();
+        } catch (\Throwable $e) {
+            return 0;
+        }
+        $count = 0;
+        $index = 0;
+        foreach ($rows as $row) {
+            $dotExtension = $format === 'original'
+                ? ($row['extension'] ? '.' . $row['extension'] : '')
+                : '.jpg';
+            $filepath = $this->basePath . '/' . $format . '/' . $row['storage_id'] . $dotExtension;
+            if (!file_exists($filepath) || !is_readable($filepath)) {
+                $unreadables[] = 'do#' . $row['id'];
+                continue;
+            }
+            $relativePath = sprintf(
+                '%1$d/%2$s/do_%3$04d_%4$d%5$s',
+                $itemId,
+                $format,
+                ++$index,
+                $row['id'],
+                $dotExtension
+            );
+            $zip->addFile($filepath, $relativePath);
+            ++$count;
+        }
+        return $count;
     }
 
     protected function zipFilesForType(string $format, int $by): int
