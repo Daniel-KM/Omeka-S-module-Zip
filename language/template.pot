@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-06 00:00+0000\n"
+"POT-Creation-Date: 2026-06-01 00:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,60 +17,76 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/scripts/upgrade.php:32 Module.php:39
+#: data/scripts/upgrade.php:33 Module.php:40
 #, php-format
 msgid "The module %1$s should be upgraded to version %2$s or later."
 msgstr ""
 
-#: data/scripts/upgrade.php:42
+#: data/scripts/upgrade.php:37 data/scripts/upgrade.php:57
+msgid "Missing requirement. Unable to upgrade."
+msgstr ""
+
+#: data/scripts/upgrade.php:44
 msgid "It is now possible to store resources separately with files."
 msgstr ""
 
-#: data/scripts/upgrade.php:49
-msgid "It is now possible to store zip by item."
-msgstr ""
-
-#: Module.php:50
+#: data/scripts/upgrade.php:53 Module.php:53 Module.php:61
 msgid "The directory \"{directory}\" is not writeable."
 msgstr ""
 
-#: Module.php:102
+#: data/scripts/upgrade.php:61
+msgid "It is now possible to store zip by item."
+msgstr ""
+
+#: Module.php:117
 msgid ""
 "Another job is running for the same process (job {link_job}#{job_id}"
 "{link_end}, {link_log}logs{link_end})."
 msgstr ""
 
-#: Module.php:138 src/Job/ZipFiles.php:61
+#: Module.php:147 src/Job/ZipFiles.php:61
 msgid "No zip to create."
 msgstr ""
 
-#: Module.php:157
+#: Module.php:166
 msgid ""
 "Creating zips in background (job {link_job}#{job_id}{link_end}, {link_log}"
 "logs{link_end})."
 msgstr ""
 
-#: Module.php:221
+#: Module.php:224
 msgid "Zip: Store items and files as zip"
 msgstr ""
 
+#: Module.php:230
+msgid "Zip items and files"
+msgstr ""
+
+#: Module.php:231
+msgid "Store items and their files as zip archives."
+msgstr ""
+
+#: Module.php:233
+msgid "Store"
+msgstr ""
+
 #: src/Job/ZipFiles.php:68
-msgid "Zipping files by items ({type})."
+msgid "Zipping files by items ({format})."
 msgstr ""
 
 #: src/Job/ZipFiles.php:73
 msgid ""
-"Zipping \"{type}\" files by item ended: {total} files created in folder "
+"Zipping \"{format}\" files by item ended: {total} files created in folder "
 "{directory}."
 msgstr ""
 
 #: src/Job/ZipFiles.php:80
-msgid "Zipping \"{type}\" files by {count}."
+msgid "Zipping \"{format}\" files by {count}."
 msgstr ""
 
 #: src/Job/ZipFiles.php:85
 msgid ""
-"Zipping \"{type}\" files by {count} ended: {total} files created in folder "
+"Zipping \"{format}\" files by {count} ended: {total} files created in folder "
 "files/zip."
 msgstr ""
 
@@ -86,24 +102,25 @@ msgstr ""
 msgid "The file path {directory} is not a directory."
 msgstr ""
 
-#: src/Job/ZipFiles.php:136
+#: src/Job/ZipFiles.php:135
 msgid "The directory {directory} for zip items cannot be created."
 msgstr ""
 
-#: src/Job/ZipFiles.php:145
+#: src/Job/ZipFiles.php:143
 msgid "The directory {directory} for zip items is not writeable."
 msgstr ""
 
-#: src/Job/ZipFiles.php:167
-msgid "Zipping \"{type}\" files by item stopped at {count]/{total}."
+#: src/Job/ZipFiles.php:165
+msgid "Zipping \"{format}\" files by item stopped at {count]/{total}."
 msgstr ""
 
-#: src/Job/ZipFiles.php:214
-msgid "For item #{item_id}, {count} \"{type}\" files are missing: #{media_ids}"
+#: src/Job/ZipFiles.php:212
+msgid ""
+"For item #{item_id}, {count} \"{format}\" files are missing: #{media_ids}"
 msgstr ""
 
-#: src/Job/ZipFiles.php:244
-msgid "Zipping \"{type}\" files stopped."
+#: src/Job/ZipFiles.php:242
+msgid "Zipping \"{format}\" files stopped."
 msgstr ""
 
 #: src/Form/SettingsFieldset.php:11

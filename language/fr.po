@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-06 00:00+0000\n"
-"PO-Revision-Date: 2025-01-06 00:00+0000\n"
+"POT-Creation-Date: 2026-06-01 00:00+0000\n"
+"PO-Revision-Date: 2026-06-01 00:00+0000\n"
 "Last-Translator: Daniel Berthereau <Daniel.fr@Berthereau.net>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -28,7 +28,7 @@ msgstr "Il est désormais possible de stocker des ressources séparément avec d
 
 #: data/scripts/upgrade.php:49
 msgid "It is now possible to store zip by item."
-msgstr "Il est désormais possible de stocker le zip par article."
+msgstr "Il est désormais possible de stocker le zip par contenu."
 
 #: Module.php:50
 msgid "The directory \"{directory}\" is not writeable."
@@ -44,7 +44,7 @@ msgstr "Aucun zip à créer."
 
 #: Module.php:157
 msgid "Creating zips in background (job {link_job}#{job_id}{link_end}, {link_log}logs{link_end})."
-msgstr "Création de zips en arrière-plan (job {link_job}#{job_id}{link_end}, {link_log}logs{link_end})."
+msgstr "Création de zips en arrière-plan (tâche {link_job}#{job_id}{link_end}, {link_log}journaux{link_end})."
 
 #: Module.php:221
 msgid "Zip: Store items and files as zip"
@@ -92,7 +92,7 @@ msgstr "L’extraction des fichiers de « {type} » par élément s’est arr�
 
 #: src/Job/ZipFiles.php:214
 msgid "For item #{item_id}, {count} \"{type}\" files are missing: #{media_ids}"
-msgstr "Pour l’article #{item_id}, il manque des fichiers {count} « {type} » : #{media_ids}"
+msgstr "Pour le contenu #{item_id}, il manque des fichiers {count} « {type} » : #{media_ids}"
 
 #: src/Job/ZipFiles.php:244
 msgid "Zipping \"{type}\" files stopped."
@@ -108,7 +108,7 @@ msgstr "Zip"
 
 #: src/Form/SettingsFieldset.php:28
 msgid "Create a zip by item for derivatives"
-msgstr "Créer un zip par article pour les produits dérivés"
+msgstr "Créer un zip par contenu pour les fichiers dérivés"
 
 #: src/Form/SettingsFieldset.php:32
 msgid "Large"
