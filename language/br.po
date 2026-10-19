@@ -8,194 +8,180 @@ msgstr ""
 "Language-Team: br <LL@li.org>\n"
 "Last-Translator: Daniel Berthereau <Daniel.fr@Berthereau.net>\n"
 "MIME-Version: 1.0\n"
-"PO-Revision-Date: 2026-06-01 00:00+0000\n"
-"POT-Creation-Date: 2026-06-01 00:00+0000\n"
+"PO-Revision-Date: 2026-10-19 00:00+0000\n"
+"POT-Creation-Date: 2026-10-19 00:00+0000\n"
 "Plural-Forms: nplurals=6; plural=(n==1 ? 0 : n%10==1 && n%100!=11 && n%100!=71 && n%100!=91 ? 1 : n%10==2 && n%100!=12 && n%100!=72 && n%100!=92 ? 2 : (n%10==3 || n%10==4 || n%10==9) && n%100!=13 && n%100!=14 && n%100!=19 && n%100!=73 && n%100!=74 && n%100!=79 && n%100!=93 && n%100!=94 && n%100!=99 ? 3 : n%1000000==0 ? 4 : 5);\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "X-Generator: Poedit 3.6\n"
 
 #: data/scripts/upgrade.php:33
-#: Module.php:40
-#, fuzzy,php-format
+#: Module.php:57
+#, php-format
 msgid "The module %1$s should be upgraded to version %2$s or later."
 msgstr "Ar modul %1$s a zlefe bezañ hizivaet d'ar stumm %2$s pe unan nevesoc'h."
 
 #: data/scripts/upgrade.php:37
 #: data/scripts/upgrade.php:57
-#, fuzzy
 msgid "Missing requirement. Unable to upgrade."
 msgstr "Rekizadenn a vank. N'haller ket hizivaat."
 
 #: data/scripts/upgrade.php:44
-#, fuzzy
 msgid "It is now possible to store resources separately with files."
 msgstr "Posupl eo bremañ stokañ danvezioù a-zisrann gant restroù."
 
 #: data/scripts/upgrade.php:53
-#: Module.php:53
-#: Module.php:61
-#, fuzzy
+#: Module.php:70
+#: Module.php:78
 msgid "The directory \"{directory}\" is not writeable."
 msgstr "N'haller ket skrivañ er c'holev \"{directory}\"."
 
 #: data/scripts/upgrade.php:61
-#, fuzzy
 msgid "It is now possible to store zip by item."
 msgstr "Posupl eo bremañ stokañ zip dre elfenn."
 
-#: Module.php:117
-#, fuzzy
+#: Module.php:134
 msgid "Another job is running for the same process (job {link_job}#{job_id}{link_end}, {link_log}logs{link_end})."
 msgstr "Ul labour all zo o vont en-dro evit an hevelep argerzh (labour {link_job}#{job_id}{link_end}, {link_log}logs{link_end})."
 
-#: Module.php:147
-#: src/Job/ZipFiles.php:61
-#, fuzzy
+#: Module.php:164
+#: src/Job/ZipFiles.php:71
 msgid "No zip to create."
 msgstr "Tamm zip ebet da grouiñ."
 
-#: Module.php:166
-#, fuzzy
+#: Module.php:184
 msgid "Creating zips in background (job {link_job}#{job_id}{link_end}, {link_log}logs{link_end})."
-msgstr "Krouiñ restroù zip en diadreñv (job {link_job}#{job_id}{link_end}, {link_log}logs{link_end})."
+msgstr "Krouiñ restroù zip en diadreñv (labour {link_job}#{job_id}{link_end}, {link_log}logs{link_end})."
 
-#: Module.php:224
-#, fuzzy
+#: Module.php:242
 msgid "Zip: Store items and files as zip"
 msgstr "Zip : Stokañ an elfennoù hag ar restroù evel zip"
 
-#: Module.php:230
+#: Module.php:248
 #, fuzzy
-msgid "Zip items and files"
-msgstr "Pakañ traezoù ha restroù"
+msgid "Zip: Prepare zips of items and files"
+msgstr "Zip : Prientiñ fichennoù zip gant traezoù ha restroù"
 
-#: Module.php:231
-#, fuzzy
+#: Module.php:249
 msgid "Store items and their files as zip archives."
 msgstr "Mirit an elfennoù hag o restroù evel dielloù zip."
 
-#: Module.php:233
-#, fuzzy
+#: Module.php:251
 msgid "Store"
 msgstr "Stal"
 
-#: src/Job/ZipFiles.php:68
+#: src/Job/ZipFiles.php:60
 #, fuzzy
+msgid "The php extension \"zip\" is required to create the archives."
+msgstr "Ret eo an astenn php \"zip\" evit krouiñ an dielloù."
+
+#: src/Job/ZipFiles.php:78
 msgid "Zipping files by items ({format})."
 msgstr "Renkadur ar restroù dre elfennoù ({format})."
 
-#: src/Job/ZipFiles.php:73
-#, fuzzy
+#: src/Job/ZipFiles.php:83
 msgid "Zipping \"{format}\" files by item ended: {total} files created in folder {directory}."
 msgstr "Echuet gant zipañ ar restroù \"{format}\" unan-hag-unan : {total} restroù krouet er c'harned {directory}."
 
-#: src/Job/ZipFiles.php:80
-#, fuzzy
+#: src/Job/ZipFiles.php:90
 msgid "Zipping \"{format}\" files by {count}."
 msgstr "Stardañ restroù \"{format}\" dre {count}."
 
-#: src/Job/ZipFiles.php:85
-#, fuzzy
+#: src/Job/ZipFiles.php:95
 msgid "Zipping \"{format}\" files by {count} ended: {total} files created in folder files/zip."
 msgstr "Echuet gwaskañ ar restroù \"{format}\" dre {count} : {total} restroù krouet er folez files/zip."
 
-#: src/Job/ZipFiles.php:93
-#, fuzzy
+#: src/Job/ZipFiles.php:103
 msgid "Added zip list in files/zip/ziplist.txt."
 msgstr "Ouzhpennet eo bet al listenn zip e files/zip/ziplist.txt."
 
-#: src/Job/ZipFiles.php:98
-#, fuzzy
+#: src/Job/ZipFiles.php:108
 msgid "Zipping ended."
 msgstr "Echuet eo ar zip."
 
-#: src/Job/ZipFiles.php:126
+#: src/Job/ZipFiles.php:146
 #, fuzzy
+msgid "Unable to collect items with digital objects: {message}"
+msgstr "N'haller ket dastum traezoù gant objedoù niverel: {message}"
+
+#: src/Job/ZipFiles.php:160
 msgid "The file path {directory} is not a directory."
 msgstr "An hentad restr {directory} n'eo ket un teul."
 
-#: src/Job/ZipFiles.php:135
-#, fuzzy
+#: src/Job/ZipFiles.php:169
 msgid "The directory {directory} for zip items cannot be created."
 msgstr "Ne c'haller ket krouiñ ar rollad {directory} evit an elfennoù zip."
 
-#: src/Job/ZipFiles.php:143
-#, fuzzy
+#: src/Job/ZipFiles.php:177
 msgid "The directory {directory} for zip items is not writeable."
 msgstr "N'haller ket skrivañ er c'havlec'h {directory} evit an elfennoù zip."
 
-#: src/Job/ZipFiles.php:165
-#, fuzzy
-msgid "Zipping \"{format}\" files by item stopped at {count]/{total}."
-msgstr "Paouezet eo bet ar zipañ restroù \"{format}\" dre elfenn e {count]/{total}."
+#: src/Job/ZipFiles.php:202
+msgid "Zipping \"{format}\" files by item stopped at {count}/{total}."
+msgstr "Paouezet eo bet ar zipañ restroù \"{format}\" dre elfenn e {count}/{total}."
 
-#: src/Job/ZipFiles.php:212
-#, fuzzy
+#: src/Job/ZipFiles.php:253
 msgid "For item #{item_id}, {count} \"{format}\" files are missing: #{media_ids}"
 msgstr "Evit an elfenn #{item_id}, {count} restr \"{format}\" a vank : #{media_ids}"
 
-#: src/Job/ZipFiles.php:242
-#, fuzzy
+#: src/Job/ZipFiles.php:347
 msgid "Zipping \"{format}\" files stopped."
 msgstr "Paouezet eo kompresadur ar restroù \"{format}\"."
 
 #: src/Form/SettingsFieldset.php:11
-#, fuzzy
 msgid "Zip resources"
 msgstr "Danvezioù Zip"
 
 #: src/Form/SettingsFieldset.php:14
-#, fuzzy
 msgid "Zip"
 msgstr "Serriñ"
 
 #: src/Form/SettingsFieldset.php:28
-#, fuzzy
 msgid "Create a zip by item for derivatives"
-msgstr "Krouiñ ur zip dre elfenn evit an deveradoù."
+msgstr "Krouiñ ur zip dre elfenn evit an deveradoù"
 
 #: src/Form/SettingsFieldset.php:32
-#, fuzzy
 msgid "Large"
 msgstr "Bras"
 
 #: src/Form/SettingsFieldset.php:34
-#, fuzzy
 msgid "Square"
 msgstr "Karrez"
 
 #: src/Form/SettingsFieldset.php:46
 #, fuzzy
+msgid "Include digital objects referenced by item in the per-item zip"
+msgstr "Ouzhpennit en zip pep elfenn an traezoù niverel meneget gant an elfenn."
+
+#: src/Form/SettingsFieldset.php:47
+#, fuzzy
+msgid "When enabled and the module DigitalObject is active, digital objects linked to an item via property values are added to the item zip."
+msgstr "Pa vez gweredekaet ha pa vez oberiant ar modul DigitalObject, e vez ouzhpennet en arc'hiv zip an elfenn an objedoù niverel liammet outi dre dalvoudoù perzh."
+
+#: src/Form/SettingsFieldset.php:58
 msgid "Create a zip for original files: Number of files by zip"
 msgstr "Krouit ur restr zip evit ar restroù orin : Niver a restroù dre zip"
 
-#: src/Form/SettingsFieldset.php:58
-#, fuzzy
+#: src/Form/SettingsFieldset.php:70
 msgid "Create a zip for large files: Number of files by zip"
 msgstr "Krouiñ ur zip evit ar restroù bras : Niver a restroù dre zip"
 
-#: src/Form/SettingsFieldset.php:70
-#, fuzzy
+#: src/Form/SettingsFieldset.php:82
 msgid "Create a zip for medium files: Number of files by zip"
 msgstr "Krouiñ ur zip evit ar restroù krenn : Niver a restroù dre zip"
 
-#: src/Form/SettingsFieldset.php:82
-#, fuzzy
+#: src/Form/SettingsFieldset.php:94
 msgid "Create a zip for square files: Number of files by zip"
 msgstr "Krouiñ ur zip evit ar restroù karrez : Niver a restroù dre zip"
 
-#: src/Form/SettingsFieldset.php:94
-#, fuzzy
+#: src/Form/SettingsFieldset.php:106
 msgid "Create a zip for asset files: Number of files by zip"
 msgstr "Krouiñ ur zip evit ar restroù madoù : Niver a restroù dre zip"
 
-#: src/Form/SettingsFieldset.php:106
-#, fuzzy
+#: src/Form/SettingsFieldset.php:118
 msgid "Add file \"zipfiles.txt\" with the list of zip files"
-msgstr "Ouzhpennit ar restr \"zipfiles.txt\" gant roll ar restroù zip."
+msgstr "Ouzhpennit ar restr \"zipfiles.txt\" gant roll ar restroù zip"
 
-#: src/Form/SettingsFieldset.php:117
-#, fuzzy
+#: src/Form/SettingsFieldset.php:129
 msgid "Run background task to create zip files (or use EasyAdmin)"
 msgstr "Lañsañ an trevell a-dreñv evit krouiñ restroù zip (pe implijit EasyAdmin)"

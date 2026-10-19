@@ -208,7 +208,7 @@ class ZipFiles extends AbstractJob
         foreach ($itemIds as $itemId) {
             if ($this->shouldStop()) {
                 $this->logger->warn(
-                    'Zipping "{format}" files by item stopped at {count]/{total}.', // @translate
+                    'Zipping "{format}" files by item stopped at {count}/{total}.', // @translate
                     ['format' => $format, 'count' => $index, 'total' => count($itemIds)]
                 );
                 return 0;
