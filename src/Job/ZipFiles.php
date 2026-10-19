@@ -106,8 +106,7 @@ class ZipFiles extends AbstractJob
             );
         }
 
-        if ($this->getArg('zip_list')) {
-            $this->addZipList();
+        if ($this->getArg('zip_list') && $this->addZipList()) {
             $this->logger->info(
                 'Added zip list in {file}.', // @translate
                 ['file' => basename($this->basePath) . '/' . \Zip\Module::DIR . '/zipfiles.txt']
@@ -254,6 +253,7 @@ class ZipFiles extends AbstractJob
             }
 
             if ($countFiles) {
+                $this->addManifest($zip);
                 $zip->close();
             } elseif (file_exists($filepathZip)) {
                 @unlink($filepathZip);
@@ -382,6 +382,7 @@ class ZipFiles extends AbstractJob
                 ++$indexFile;
             }
 
+            $this->addManifest($zip);
             $zip->close();
         }
 
@@ -401,11 +402,35 @@ class ZipFiles extends AbstractJob
         return count($filesZip);
     }
 
-    protected function addZipList(): void
+    /**
+     * Add the list of the files of a zip inside it, as "zipfiles.txt".
+     */
+    protected function addManifest(ZipArchive $zip): void
     {
+        $list = [];
+        for ($i = 0; $i < $zip->numFiles; ++$i) {
+            $list[] = $zip->getNameIndex($i);
+        }
+        $zip->addFromString('zipfiles.txt', implode("\n", $list) . "\n");
+    }
+
+    /**
+     * List all the zip files, by directory and by item, in "zipfiles.txt".
+     */
+    protected function addZipList(): bool
+    {
+        $dir = $this->basePath . '/' . \Zip\Module::DIR;
+        $zips = array_merge(
+            glob($dir . '/*.zip') ?: [],
+            glob($this->basePath . '/' . \Zip\Module::DIR_ITEMS . '/*.zip') ?: []
+        );
+        if (!$zips) {
+            @unlink($dir . '/zipfiles.txt');
+            return false;
+        }
         $length = mb_strlen($this->basePath) + 1;
-        $list = implode("\n", array_map(fn ($v) => mb_substr($v, $length), glob($this->basePath . '/' . \Zip\Module::DIR . '/*.zip')));
-        file_put_contents($this->basePath . '/' . \Zip\Module::DIR . '/zipfiles.txt', $list);
+        $list = implode("\n", array_map(fn ($v) => mb_substr($v, $length), $zips));
+        return (bool) file_put_contents($dir . '/zipfiles.txt', $list . "\n");
     }
 
     /**
