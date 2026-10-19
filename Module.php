@@ -256,7 +256,7 @@ class Module extends AbstractModule
         if (method_exists($form, 'addTaskSubjects')) {
             $form->addTaskSubjects([
                 'zip_zip' => [
-                    'name' => 'Zip items and files', // @translate
+                    'name' => 'Zip: Prepare zips of items and files', // @translate
                     'description' => 'Store items and their files as zip archives.', // @translate
                     'actions' => [
                         'zip_zip' => 'Store', // @translate
