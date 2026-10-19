@@ -33,6 +33,16 @@ class Module extends AbstractModule
 
     const NAMESPACE = __NAMESPACE__;
 
+    /**
+     * Directory of the zip files, relative to the files directory.
+     *
+     * The zip files contain private files too, so the directory is protected
+     * from a direct web access.
+     */
+    const DIR = 'zip_backup';
+
+    const DIR_ITEMS = 'zip_backup/items';
+
     protected function preInstall(): void
     {
         $services = $this->getServiceLocator();
@@ -52,18 +62,19 @@ class Module extends AbstractModule
         $config = $this->getServiceLocator()->get('Config');
         $basePath = $config['file_store']['local']['base_path'] ?: (OMEKA_PATH . '/files');
 
-        if (!$this->checkDestinationDir($basePath . '/zip')) {
+        // The zip files contain private files, so protect their directory.
+        if (!$this->checkDestinationDir($basePath . '/' . self::DIR, true)) {
             $message = new PsrMessage(
                 'The directory "{directory}" is not writeable.', // @translate
-                ['directory' => $basePath . '/zip']
+                ['directory' => $basePath . '/' . self::DIR]
             );
             $errors[] = (string) $message;
         }
 
-        if (!$this->checkDestinationDir($basePath . '/zip_items')) {
+        if (!$this->checkDestinationDir($basePath . '/' . self::DIR_ITEMS)) {
             $message = new PsrMessage(
                 'The directory "{directory}" is not writeable.', // @translate
-                ['directory' => $basePath . '/zip_items']
+                ['directory' => $basePath . '/' . self::DIR_ITEMS]
             );
             $errors[] = (string) $message;
         }

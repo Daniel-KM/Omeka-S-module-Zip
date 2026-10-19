@@ -52,6 +52,15 @@ class ZipFiles extends AbstractJob
         $this->connection = $services->get('Omeka\Connection');
         $this->entityManager = $services->get('Omeka\EntityManager');
 
+        if (!$services->get('Common\DirectoryManager')->checkDestinationDir($this->basePath . '/' . \Zip\Module::DIR, true)) {
+            $this->job->setStatus(Job::STATUS_ERROR);
+            $this->logger->err(
+                'The directory "{directory}" is not writeable.', // @translate
+                ['directory' => basename($this->basePath) . '/' . \Zip\Module::DIR]
+            );
+            return;
+        }
+
         // The extension zip is required by composer.json, but a module
         // installed from a release zip does not run composer, so check it here
         // to fail with a message instead of a fatal error.
@@ -81,7 +90,7 @@ class ZipFiles extends AbstractJob
             $total = $this->zipFilesByItemForType($zipItems);
             $this->logger->notice(
                 'Zipping "{format}" files by item ended: {total} files created in folder {directory}.', // @translate
-                ['format' => $zipItems, 'total' => $total, 'directory' => basename($this->basePath) . '/zip_items']
+                ['format' => $zipItems, 'total' => $total, 'directory' => basename($this->basePath) . '/' . \Zip\Module::DIR_ITEMS]
             );
         }
 
@@ -92,15 +101,16 @@ class ZipFiles extends AbstractJob
             );
             $total = $this->zipFilesForType($format, (int) $by);
             $this->logger->notice(
-                'Zipping "{format}" files by {count} ended: {total} files created in folder files/zip.', // @translate
-                ['format' => $format, 'count' => $by, 'total' => $total]
+                'Zipping "{format}" files by {count} ended: {total} files created in folder {directory}.', // @translate
+                ['format' => $format, 'count' => $by, 'total' => $total, 'directory' => basename($this->basePath) . '/' . \Zip\Module::DIR]
             );
         }
 
-        if ($this->getArg('zipList')) {
+        if ($this->getArg('zip_list')) {
             $this->addZipList();
             $this->logger->info(
-                'Added zip list in files/zip/ziplist.txt.' // @translate
+                'Added zip list in {file}.', // @translate
+                ['file' => basename($this->basePath) . '/' . \Zip\Module::DIR . '/zipfiles.txt']
             );
         }
 
@@ -153,12 +163,12 @@ class ZipFiles extends AbstractJob
             return 0;
         }
 
-        $path = $this->basePath . '/zip_items';
+        $path = $this->basePath . '/' . \Zip\Module::DIR_ITEMS;
         if (file_exists($path) && !is_dir($path)) {
             $this->job->setStatus(Job::STATUS_ERROR);
             $this->logger->err(
                 'The file path {directory} is not a directory.', // @translate
-                ['directory' => basename($this->basePath) . '/zip_items']
+                ['directory' => basename($this->basePath) . '/' . \Zip\Module::DIR_ITEMS]
             );
             return 0;
         } elseif (!file_exists($path)) {
@@ -167,7 +177,7 @@ class ZipFiles extends AbstractJob
                 $this->job->setStatus(Job::STATUS_ERROR);
                 $this->logger->err(
                     'The directory {directory} for zip items cannot be created.', // @translate
-                    ['directory' => basename($this->basePath) . '/zip_items']
+                    ['directory' => basename($this->basePath) . '/' . \Zip\Module::DIR_ITEMS]
                 );
                 return 0;
             }
@@ -175,7 +185,7 @@ class ZipFiles extends AbstractJob
             $this->job->setStatus(Job::STATUS_ERROR);
             $this->logger->err(
                 'The directory {directory} for zip items is not writeable.', // @translate
-                ['directory' => basename($this->basePath) . '/zip_items']
+                ['directory' => basename($this->basePath) . '/' . \Zip\Module::DIR_ITEMS]
             );
             return 0;
         }
@@ -209,7 +219,7 @@ class ZipFiles extends AbstractJob
             if ($medias->isEmpty() && !$includeDigitalObjects) {
                 continue;
             }
-            $filepathZip = $this->basePath . '/zip_items/' . $itemId . '. ' . $format . '.zip';
+            $filepathZip = $this->basePath . '/' . \Zip\Module::DIR_ITEMS . '/' . $itemId . '.' . $format . '.zip';
             if (file_exists($filepathZip)) {
                 @unlink($filepathZip);
             }
@@ -335,8 +345,8 @@ class ZipFiles extends AbstractJob
         $filesZip = [];
         $index = 0;
         $indexFile = 1;
-        $baseFilename = $this->basePath . '/zip/tmp/' . $format . '_';
-        $finalBaseFilename = $this->basePath . '/zip/' . $format . '_';
+        $baseFilename = $this->basePath . '/' . \Zip\Module::DIR . '/tmp/' . $format . '_';
+        $finalBaseFilename = $this->basePath . '/' . \Zip\Module::DIR . '/' . $format . '_';
         $totalChunks = (int) ceil(count($filesList) / $by);
 
         @mkdir(dirname($baseFilename), 0775, true);
@@ -377,7 +387,7 @@ class ZipFiles extends AbstractJob
 
         // Remove all old zip files for this type.
         $removeList = glob($finalBaseFilename . '*.zip');
-        $removeList[] = $this->basePath . '/zip/zipfiles.txt';
+        $removeList[] = $this->basePath . '/' . \Zip\Module::DIR . '/zipfiles.txt';
         foreach ($removeList as $file) {
             @unlink($file);
         }
@@ -386,6 +396,7 @@ class ZipFiles extends AbstractJob
         foreach ($filesZip as $file) {
             rename($file, str_replace($baseFilename, $finalBaseFilename, $file));
         }
+        @rmdir(dirname($baseFilename));
 
         return count($filesZip);
     }
@@ -393,8 +404,8 @@ class ZipFiles extends AbstractJob
     protected function addZipList(): void
     {
         $length = mb_strlen($this->basePath) + 1;
-        $list = implode("\n", array_map(fn ($v) => mb_substr($v, $length), glob($this->basePath . '/zip/*.zip')));
-        file_put_contents($this->basePath . '/zip/zipfiles.txt', $list);
+        $list = implode("\n", array_map(fn ($v) => mb_substr($v, $length), glob($this->basePath . '/' . \Zip\Module::DIR . '/*.zip')));
+        file_put_contents($this->basePath . '/' . \Zip\Module::DIR . '/zipfiles.txt', $list);
     }
 
     /**
