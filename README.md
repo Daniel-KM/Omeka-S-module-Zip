@@ -35,12 +35,28 @@ Usage
 ### Zip of files directories
 
 The zip are created one-time when you check the box "create zips now" in the
-main settings. Zip files are available in directory "files/zip" at the root of
-Omeka.
+main settings. Zip files are available in directory "files/zip_backup" at the
+root of Omeka.
 
-The first zip is always `files/zip/{type}_0001.zip`, for example "files/zip/large_0001.zip".
-The number total of files is indicated in the comments of each zip file. A list
-of files is available at "files/zip/zipfiles.txt".
+The first zip is always `files/zip_backup/{type}_0001.zip`, for example
+"files/zip_backup/large_0001.zip". The number total of files is indicated in the
+comments of each zip file. The list of all zip files, by directory and by item,
+is available at "files/zip_backup/zipfiles.txt", and each zip file contains the
+list of its own files in "zipfiles.txt".
+
+### Zip of items
+
+The zip of each item is stored in "files/zip_backup/items".
+
+### Protected directory
+
+The zip files contain all files, private ones included, so the directory "files/zip_backup"
+is protected with a ".htaccess" that denies any direct web access. This
+protection works with Apache only: with another server, deny the directory in
+its configuration.
+
+Before version 3.4.7, the zip files were stored in "files/zip" and "files/zip_items".
+They were moved automatically during upgrade.
 
 
 Warning
@@ -101,7 +117,7 @@ been built for the digital library [Explore] of [Université PSL] (Paris Science
 [Omeka S]: https://omeka.org/s
 [Derivative Media]: https://gitlab.com/Daniel-KM/Omeka-S-module-DerivativeMedia
 [installing a module]: https://omeka.org/s/docs/user-manual/modules/#installing-modules
-[Zip.zip]: https://github.com/Daniel-KM/Omeka-S-module-Zip/-/releases
+[Zip.zip]: https://gitlab.com/Daniel-KM/Omeka-S-module-Zip/-/releases
 [module issues]: https://gitlab.com/Daniel-KM/Omeka-S-module-Zip/-/issues
 [CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
