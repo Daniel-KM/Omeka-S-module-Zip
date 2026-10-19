@@ -52,6 +52,16 @@ class ZipFiles extends AbstractJob
         $this->connection = $services->get('Omeka\Connection');
         $this->entityManager = $services->get('Omeka\EntityManager');
 
+        // The extension zip is required by composer.json, but a module
+        // installed from a release zip does not run composer, so check it here
+        // to fail with a message instead of a fatal error.
+        if (!class_exists('ZipArchive')) {
+            $this->logger->err(
+                'The php extension "zip" is required to create the archives.' // @translate
+            );
+            return;
+        }
+
         $zipItems = $this->getArg('zip_items') ?: null;
         $zipBy = $this->getArg('zip_by', []);
         $zipBy = array_filter(array_map('intval', $zipBy));
